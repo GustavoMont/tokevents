@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>Tokevents</title>
+</head>
+
+<body>
+    <header>
+        <h1>Tokevents</h1>
+        <nav>
+            <ul>
+                <li><a href="./signin.html">Start</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main>
+        <section id="start">
+
+            <div class="form-container">
+                <h3>Entrar</h3>
+                <form action="/auth/login" method="post">
+                    <div class="field">
+                        <label for="login">Usuário ou E-mail</label>
+                        <input type="text" name="login" id="login">
+                    </div>
+
+                    <div class="field">
+                        <label for="senha">Senha</label>
+                        <input type="text" name="login" id="login">
+                    </div>
+                    <hr />
+                    <button type="submit">Entrar</button>
+                </form>
+            </div>
+
+            <div class="form-container">
+                <h3>Registra-se</h3>
+                <div class="field">
+                    <label for="nome">Nome: </label>
+                    <input type="text" name="nome" id="nome">
+                </div>
+                <div class="field">
+                    <label for="email">E-mail: </label>
+                    <input type="text" name="email" id="email">
+                </div>
+                <div class="field">
+                    <label for="user_name">Usuário: </label>
+                    <input type="text" name="user_name" id="user_name">
+                </div>
+                <div class="field">
+                    <label for="senha">Senha:</label>
+                    <input type="text" name="senha" id="senha">
+                </div>
+                <div class="field">
+                    <label for="confirm">Confirme sua senha:</label>
+                    <input type="text" name="confirm" id="confirm">
+                </div>
+
+                <hr />
+
+                <button type="submit">Registrar</button>
+            </div>
+        </section>
+
+        <section>
+            <h3>Organize Seus Compromissos</h3>
+            <p>
+                Veja com clareza quais compromissos e eventos você tem marcado, e não perca nada do que foi planejado
+            </p>
+        </section>
+
+        <section>
+            <h3>Compartilhar</h3>
+            <p>
+                Convide seus amigos para experenciar eventos que você gostaria que você deseja compartilhar
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; Aplicação Fictícia</p>
+        <p>Feito com &#128151 por <a href="https://github.com/gustavomont" target="blank">Gustavo Monteiro</a></p>
+        <p></p>
+    </footer>
+</body>
+
+</html>
