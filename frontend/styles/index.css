@@ -1,0 +1,15 @@
+.field{
+    margin: .4rem 0;
+}
+
+.send{
+    background-color: var(--tumbleweed) !important;
+    color: #fff !important;
+}
+
+#divider{
+    content: '';
+    height: 2px;
+    background-color: var(--rose-dust);
+    margin: 1.5rem 0;
+}
