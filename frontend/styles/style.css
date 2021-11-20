@@ -1,0 +1,35 @@
+:root {
+    --main-blue: rgba(53, 80, 112, 1);
+    --chinese-violet: rgba(109, 89, 122, 1);
+    --rose-dust: rgba(181, 101, 118, 1);
+    --candy-pink: rgba(229, 107, 111, 1);
+    --tumbleweed: rgba(234, 172, 139, 1);
+    font-size: 16px;
+}
+
+
+h1{
+    color: var(--main-blue);
+}
+
+h3{
+    color: var(--candy-pink);
+}
+
+body{
+    background-color: rgb(255, 242, 242) !important; 
+    padding: 0 1rem;
+    padding-top: 5.5rem;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--tumbleweed);
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}

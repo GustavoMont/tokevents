@@ -1,0 +1,7 @@
+.field{
+    margin: .4rem 0;
+}
+
+.send{
+    background-color: var(--tumbleweed) !important;
+}
