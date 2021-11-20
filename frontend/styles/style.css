@@ -19,7 +19,8 @@ h3{
 body{
     background-color: rgb(255, 242, 242) !important; 
     padding: 0 1rem;
-    padding-top: 5.5rem;
+    padding-top: 6rem;
+    font-family: 'Josefin Sans', sans-serif !important;
 }
 
 header{
