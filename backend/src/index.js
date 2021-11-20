@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require('mongoose');
 require('dotenv/config')
 
-const cadastroRoute = require('./routes/cadastro')
+const authRoute = require('./routes/auth')
 
 const app = express()
 
@@ -23,8 +23,7 @@ app.get('/', (req, res) =>{
     res.send(pathsHtml)
 })
 
-app.use('/cadastro', cadastroRoute)
-
+app.use('/auth', authRoute)
 
 
 app.listen(8080, () =>{
