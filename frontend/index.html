@@ -34,9 +34,9 @@
     <main>
         <section id="start">
 
-            <div class="form-container mb-4">
+            <div class="form-container mb-4 row g-3 align-items-center">
                 <h3>Entrar</h3>
-                <form action="/auth/login" method="post">
+                <form action="/auth/login" class="col-auto" method="post">
                     <div class="field">
                         <label for="login" class="form-label" >Usuário ou E-mail</label>
                         <input type="text" name="login" id="login" class="form-control">
@@ -51,33 +51,40 @@
                 </form>
             </div>
 
-            <div class="form-container mb-4">
+            <div class="form-container mb-4 row g-3 align-items-center">
                 <h3>Registra-se</h3>
-                <div class="field">
-                    <label for="nome" class="form-label">Nome: </label>
-                    <input type="text" name="nome" id="nome">
-                </div>
-                <div class="field">
-                    <label for="email">E-mail: </label>
-                    <input type="text" name="email" id="email">
-                </div>
-                <div class="field">
-                    <label for="user_name">Usuário: </label>
-                    <input type="text" name="user_name" id="user_name">
-                </div>
-                <div class="field">
-                    <label for="senha" class="form-label">Senha:</label>
-                    <input type="text" name="senha" id="senha">
-                </div>
-                <div class="field">
-                    <label for="confirm" class="form-label">Confirme sua senha:</label>
-                    <input type="text" name="confirm" id="confirm">
-                </div>
 
-                <hr />
-
-                <button type="submit" class="btn send">Registrar</button>
+                <form action="/auth/cadastro" method="post" class="col-auto">
+                    <div class="field">
+                        <label for="nome" class="form-label">Nome: </label>
+                        <input type="text" name="nome" id="nome" class="form-control">
+                    </div>
+                    <div class="field">
+                        <label for="email">E-mail: </label>
+                        <input type="text" name="email" id="email" class="form-control">
+                    </div>
+                    <div class="field">
+                        <label for="user_name">Usuário: </label>
+                        <input type="text" name="user_name" id="user_name" class="form-control">
+                    </div>
+                    <div class="field">
+                        <label for="senha" class="form-label">Senha:</label>
+                        <input type="text" name="senha" id="senha" class="form-control">
+                        <div id="passwordHelpBlock" class="form-text">
+                            Sua senha deve ter 8-20 caracteres e conter números e carcteres especiais.
+                          </div>
+                    </div>
+                    <div class="field">
+                        <label for="confirm" class="form-label">Confirme sua senha:</label>
+                        <input type="text" name="confirm" id="confirm" class="form-control">
+                    </div>
+    
+                    <hr />
+    
+                    <button type="submit" class="btn send">Registrar</button>
+                </form>
             </div>
+
         </section>
 
         <section>
