@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv/config')
 
 const authRoute = require('./routes/auth')
-
+const homeRoute = require('./routes/home')
 const app = express()
 
 //app.use(express.static('../../frontend'))
@@ -24,6 +24,7 @@ app.get('/', (req, res) =>{
 })
 
 app.use('/auth', authRoute)
+app.use('/home', homeRoute)
 
 
 app.listen(8080, () =>{
