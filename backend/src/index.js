@@ -14,10 +14,14 @@ const pathsHtml = `
 <h1>Certo Chefe</h1>
 <a href="/cadastro">Cadastro</a>
 `
+try {
+    mongoose.connect(process.env.DATA_BASE_CONNECTION, { useNewUrlParser: true }, () =>{
+        console.log('Conectado')
+    })
+} catch (error) {
+    console.log(error.message)
+}
 
-mongoose.connect(process.env.DATA_BASE_CONNECTION, { useNewUrlParser: true }, () =>{
-    console.log('Conectado')
-})
 
 app.get('/', (req, res) =>{
     res.send(pathsHtml)
