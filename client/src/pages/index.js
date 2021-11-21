@@ -1,5 +1,6 @@
 import React from 'react'
 import Form from '../Components/Form'
+import { handleLogin } from '../utils/handleAuth'
 
 export default function Home(){
     const login = [
@@ -17,7 +18,7 @@ export default function Home(){
     return (
         <>
             <section>
-                <Form inputs={login} method={"POST"} action="localhost:8080/auth/login" butao="Login" />
+                <Form inputs={login} method={"POST"} action="localhost:8080/auth/login" butao="Login" submit={handleLogin}/>
                 <hr />
                 <Form inputs={cadastro} method={"POST"} action="localhost:8080/auth/signIn" butao="Cadastrar" />
                 
