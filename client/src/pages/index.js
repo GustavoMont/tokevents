@@ -1,7 +1,7 @@
 import React from 'react'
 import Form from '../Components/Form'
 
-export default function Home(){
+export default function Index(){
     const login = [
         {label: 'Usuário ou Email', name: 'login', type: 'text', key: 'login_login'},
         {label: 'Senha', name: 'senha', type: 'password', key: 'login_senha'},
@@ -17,9 +17,9 @@ export default function Home(){
     return (
         <>
             <section>
-                <Form inputs={login} method={"POST"} action="localhost:8080/auth/login" butao="Login" />
+                <Form inputs={login} method={"POST"} action="/auth/login" butao="Login" />
                 <hr />
-                <Form inputs={cadastro} method={"POST"} action="localhost:8080/auth/signIn" butao="Cadastrar" />
+                <Form inputs={cadastro} method={"POST"} action="/auth/signIn" butao="Cadastrar" />
                 
             </section>
         </>
