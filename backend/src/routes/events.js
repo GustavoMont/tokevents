@@ -21,7 +21,6 @@ router.post('/agendar', async (req, res) => {
                 res.status(400).json({ erro: true, field: 'data_inicio' ,message: "A Data de Início não pode sre maior que a data do término" })
             }
         }
-        console.log(find)
         if (find) {
             res.status(400).json({ erro: true, field: 'header' ,message: "Evento já cadastrado" })
             return
@@ -37,7 +36,6 @@ router.post('/agendar', async (req, res) => {
             res.status(201).json({message: "Evento Cadastrado com Sucesso"})}
         )
         .catch(erro => res.status(400).json(err))
-        // res.send("MERDA")
     } catch (error) {
         res.status(500).json({ erro: true, message: error.message })
     }
