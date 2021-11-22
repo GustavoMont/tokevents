@@ -5,7 +5,7 @@ router.use(authMiddleware)
 
 
 router.get('/', (req, res) => {
-    res.send({ ok: true })
+    res.send({ login: true })
 })
 
 

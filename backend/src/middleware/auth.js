@@ -7,21 +7,21 @@ module.exports = (req, res, next) => {
 
 
     if (!authHeader)
-        return res.status(401).send({ err: "Sem tolken" });
+        return res.status(401).send({ err: "Sem tolken", login: false });
 
     const parts = authHeader.split(' ')
 
     if (!parts.length == 2)
-        return res.status(401).send({ err: "Erro no Token" });
+        return res.status(401).send({ err: "Erro no Token", login: false });
 
     const [schema, token] = parts
 
     if (!/^Bearer/i.test(schema))
-        return res.status(401).send({ err: "Token Mal Formatado" });
+        return res.status(401).send({ err: "Token Mal Formatado", login:false });
 
     jwt.verify(token, process.env.TOKEN_KEY, (err, decoded) => {
         if (err) {
-            return res.status(401).send({ err: "Token Inválido" });
+            return res.status(401).send({ err: "Token Inválido", login: false });
         }
         req.userId = decoded.id
         return next();
