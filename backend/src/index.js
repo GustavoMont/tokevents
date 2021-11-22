@@ -4,6 +4,7 @@ require('dotenv/config')
 
 const authRoute = require('./routes/auth')
 const homeRoute = require('./routes/home')
+const eventsRoute = require('./routes/events')
 const app = express()
 
 //app.use(express.static('../../frontend'))
@@ -29,7 +30,7 @@ app.get('/', (req, res) =>{
 
 app.use('/auth', authRoute)
 app.use('/home', homeRoute)
-
+app.use('/events', eventsRoute)
 
 app.listen(8080, () =>{
     console.log('Server is runing')
