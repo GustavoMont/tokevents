@@ -12,16 +12,15 @@ router.get('/', (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    const { login, senha } = req.body
+    const { login, password } = req.body
 
     try {
         const user = await User.findOne({ $or: [{ "user_name": login }, { "email": login }] }, { "email": 1, "user_name": 1, "nome": 1 }).select('+password')
-
         if (!user) {
             res.status(400).json({ message: "Usuário não cadastrado" })
             return
         }
-        if (! await argon2.verify(user.password, senha)) {
+        if (! await argon2.verify(user.password, password)) {
             res.status(400).json({ message: "Senha incorreta" })
             return
         }
