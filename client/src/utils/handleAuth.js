@@ -22,3 +22,16 @@ export const handleLogin = async (e) =>{
     }
 
 }
+
+export const handleToken = async (token)=>{
+    const homeResponse = await fetch("/home", {
+        method: 'GET',
+        headers:{
+            'Content-Type': 'application/json',
+            'auth': token
+        }
+    })
+    const jsonRes = await homeResponse.json()
+
+    return jsonRes.login
+}
