@@ -2,12 +2,13 @@ import {
     Routes as Manager,
     Route
 } from 'react-router-dom'
-import Home from './pages'
-
+import Index from './pages'
+import Home from './pages/Home'
 
 const Routes = () => (
      <Manager>
-         <Route path="/" element={<Home />}  />
+         <Route path="/" element={<Index />}  />
+         <Route path="/home" element={<Home />}  />
      </Manager>
 )
 

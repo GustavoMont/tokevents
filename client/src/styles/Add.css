@@ -1,0 +1,15 @@
+#add-btn{
+    position: fixed;
+    bottom: 22px;
+    right: 30px;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+
+    background-color: var(--main-color);
+}
+
+i{
+    color: #fff;
+}

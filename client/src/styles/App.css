@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --main-color: rgba(84, 149, 201, 1);
+    --analog-main-dark: rgba(3, 37, 108, 1);
+    --secondary-color: rgba(240, 101, 67, 1);
+    --terciary-color: rgba(76, 185, 68, 1);
+    --contrast-main: rgba(245, 238, 158, 1);
+
+    --postit-yellow: #f1e41b;
+    --postit-pink: #ff8d9c;
+    --postit-green: #79cbc5;
+    --postit-orange: #fbae4a;
+}
+
+body{
+    min-height: 100vh;
+}
