@@ -35,27 +35,28 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/signIn', async (req, res) => {
-    const body = req.body
+    try {
+        const body = req.body
 
-    const hash = await argon2.hash(body.password)
-    const user = new User({
-        ...req.body,
-        password: hash
-    })
-    req.body.password = undefined
-    if ((await User.findOne({ "email": body.email }))) {
-        res.status(400).json({ message: "Usuário já cadastrado" })
-        return
-    }
-
-    user.save()
-        .then(data => {
-            user.password = undefined
-            res.status(201).json({ user, token: generateToken(user.id) })
-
+        const hash = await argon2.hash(body.password)
+        const user = new User({
+            ...req.body,
+            password: hash
         })
-        .catch(err => { res.status(400).json({ message: err }) })
+        if ((await User.findOne({ "email": body.email }))) {
+            res.status(400).json({ message: "Usuário já cadastrado" })
+            return
+        }
 
+        user.save()
+            .then(data => {
+                user.password = undefined
+                res.status(201).json({ user, token: generateToken(user.id) })
+            })
+            .catch(err => { res.status(400).json({ message: err }) })
+    } catch (error) {
+        res.status(500).json({erro: true, message: error.message})
+    }
 
 })
 
