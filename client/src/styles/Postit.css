@@ -46,3 +46,10 @@ div.postit p.data{
     margin: 0;
     padding: .3rem;
 }
+
+.post-it-btn, .post-it-delete{
+    padding-bottom: 1rem !important;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 .5rem;
+}
