@@ -1,6 +1,5 @@
 main#home{
     /* max-width: 100vw; */
-    min-height: 100vh;
-    background-color: var(--main-color);        
+    min-height: 100vh;        
     position: relative;
 }
