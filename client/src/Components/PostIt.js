@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { randomBg } from '../utils/randomGenarate'
+import { Modal, ModalBody, ModalHeader, Button, Collapse, Alert } from 'reactstrap'
 import '../styles/Postit.css'
 
 
 
-export default function PostIt({ title, description, data_inicio, data_fim }) {
-    const bgColors = ['--postit-yellow', '--postit-pink', '--postit-green', '--postit-orange']
-    
+export default function PostIt({ title, description, data_inicio, data_fim, color }) {
+    const [modalContent, setModalContent] = useState({})
     const [open, setOpen] = useState(false)
-
+    const [openConfirm, setOpenConfirm] = useState(false)
     return (
         <>
-            <div className="postit" style={{ backgroundColor: `var(${bgColors[randomBg(0, bgColors.length - 1)]})` }}>
+            <div className="postit" style={{ backgroundColor: `var(${color})` }}
+                onClick={() => {
+                    setModalContent({ title, description, data_inicio, data_fim })
+                    setOpen(true)
+                }}
+            >
                 <header>
                     <h1>{title}</h1>
                     <div id="options-container">
@@ -26,13 +29,46 @@ export default function PostIt({ title, description, data_inicio, data_fim }) {
 
 
             </div>
-            <Modal isOpen={open} toggle={() => setOpen(false)}>
-                <ModalHeader>
-                    Modal title
+            <Modal isOpen={open} toggle={() => setOpen(false)} >
+                <ModalHeader toggle={() => {setOpen(false); setOpenConfirm(false)}}>
+                    {modalContent.title}
                 </ModalHeader>
                 <ModalBody>
-                    Modal body text goes here.
+                    {modalContent.description}
                 </ModalBody>
+                <hr />
+                <div className="post-it-btn">
+                    <Button color="success">
+                        Concluir Evento
+                    </Button>
+                    <Button
+                        color="danger"
+                        onClick={() => setOpenConfirm(!openConfirm)}
+
+                    >
+                        Exluir Evento
+                    </Button>
+                </div>
+
+                <Collapse isOpen={openConfirm}>
+                    <Alert
+                        style={{ width: '95%', margin: '0 auto 1rem auto' }}
+                        color="danger"
+                    >
+                        <p style={{textAlign: 'center'}} ><strong>Deseja excluir esse evento?</strong></p>
+                        <div className="post-it-delete">
+                            <Button color="danger">
+                                Confirmar
+                            </Button>
+                            <Button
+                                onClick={() => setOpenConfirm(false)}
+                                color="secondary"
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
+                    </Alert>
+                </Collapse>
             </Modal>
         </>
     )
