@@ -28,6 +28,16 @@ export default function Index() {
                                             <Input type="text" name="password" id="password" required placeholder="Sua senha..." />
                                         </FormGroup>
                                         <Button className="submit-btn" type="submit" >Entrar</Button>
+                                        <div  className="msg-container" >                                        
+                                            <Collapse horizontal id="collapse-msg-login" >
+
+                                                <Alert
+                                                    color="danger"
+                                                >
+                                                    <p id="login-msg" ></p>
+                                                </Alert>
+                                            </Collapse>
+                                        </div>
                                     </Form>
                                 </div>
                             </Col>
@@ -91,16 +101,6 @@ export default function Index() {
                                             </Col>
                                         </Row>
                                         <Button className="submit-btn" >Cadastre-se</Button>
-                                        <div  className="msg-container" >                                        
-                                            <Collapse horizontal id="collapse-msg-cad" >
-
-                                                <Alert
-                                                    color="danger"
-                                                >
-                                                    <p id="cad-msg" ></p>
-                                                </Alert>
-                                            </Collapse>
-                                        </div>
                                     </Form>
                                 </div>
                             </Col>
