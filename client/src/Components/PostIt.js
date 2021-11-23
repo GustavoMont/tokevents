@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, ModalBody, ModalHeader, Button, Collapse, Alert } from 'reactstrap'
 import '../styles/Postit.css'
+import { formateDate } from "../utils/formateDate";
 
 
 
@@ -25,7 +26,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                 <div className="desc">
                     <p>{description.slice(0, 200) + '...'}</p>
                 </div>
-                <p className="data" >{data_inicio} {data_fim ? ' - ' : ''} {data_fim || ''}</p>
+                <p className="data" >{formateDate(data_inicio)} {data_fim ? ' - ' : ''} {formateDate(data_fim) || ''}</p>
 
 
             </div>
