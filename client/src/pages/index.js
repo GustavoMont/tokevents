@@ -1,10 +1,10 @@
 import React from 'react'
-import { handleLogin, handleSignIn } from '../utils/handleAuth'
+import { handleLogin, handleSignIn } from '../utils/handleForms'
 import '../styles/Index.css'
 import {
     Button, Form, FormGroup, Input,
     Label, FormFeedback, Row, Col, FormText, Container,
-    Alert,Collapse
+    Alert, Collapse
 } from 'reactstrap'
 
 export default function Index() {
@@ -17,6 +17,15 @@ export default function Index() {
                         <Row>
                             <Col md="6">
                                 <div className="form-container" >
+                                    <div className="msg-container" >
+                                        <Collapse horizontal id="collapse-msg-login" >
+                                            <Alert
+                                                color="danger"
+                                            >
+                                                <p id="login-msg" ></p>
+                                            </Alert>
+                                        </Collapse>
+                                    </div>
                                     <h1>Entrar</h1>
                                     <Form onSubmit={handleLogin}>
                                         <FormGroup>
@@ -28,31 +37,27 @@ export default function Index() {
                                             <Input type="password" name="password" id="password" required placeholder="Sua senha..." />
                                         </FormGroup>
                                         <Button className="submit-btn" type="submit" >Entrar</Button>
-                                        <div  className="msg-container" >                                        
-                                            <Collapse horizontal id="collapse-msg-login" >
-                                                <Alert
-                                                    color="danger"
-                                                >
-                                                    <p id="login-msg" ></p>
-                                                </Alert>
-                                            </Collapse>
-                                        </div>
                                     </Form>
                                 </div>
                             </Col>
 
-
-
                             <Col md="6" >
                                 <div className="form-container" id="cadastro">
                                     <h1>Cadastre-se</h1>
+                                    <Collapse horizontal id="collapse-msg-sign" >
+                                        <Alert
+                                            color="danger"
+                                        >
+                                            <p id="sign-msg"></p>
+                                        </Alert>
+                                    </Collapse>
                                     <Form onSubmit={handleSignIn} >
                                         <Row>
                                             <Col sm="6">
                                                 <FormGroup>
                                                     <Label for="nome">Nome: </Label>
-                                                    <Input type="text" required id="nome" name="nome" 
-                                                    placeholder="Seu nome aqui..."  data-field="nome" />
+                                                    <Input type="text" required id="nome" name="nome"
+                                                        placeholder="Seu nome aqui..." data-field="nome" />
                                                 </FormGroup>
                                                 <FormFeedback>
                                                     Nome inválido.
@@ -61,8 +66,8 @@ export default function Index() {
                                             <Col>
                                                 <FormGroup>
                                                     <Label for="user_name">Nome de Usuário: </Label>
-                                                    <Input type="text" name="user_name" id="user_name" 
-                                                    placeholder="Um user_name bacana..." data-field="user_name" />
+                                                    <Input type="text" name="user_name" id="user_name"
+                                                        placeholder="Um user_name bacana..." data-field="user_name" />
                                                     <FormFeedback>
                                                         Nome de usuário inválido. Não utilize pontos nem hífens.
                                                     </FormFeedback>
@@ -78,7 +83,7 @@ export default function Index() {
                                                 <FormGroup>
                                                     <Label for="cad_password">Senha</Label>
                                                     <Input type="password" name="cad_password"
-                                                        id="cad_password" 
+                                                        id="cad_password"
                                                         placeholder="Digite uma senha forte..." data-field="cad_password" />
                                                     <FormText>
                                                         Sua senha deve ter de 8-16 caracteres, incluindo letras, números e caracteres especiais.
@@ -99,15 +104,8 @@ export default function Index() {
                                                 </FormGroup>
                                             </Col>
                                         </Row>
-                                        <Button className="submit-btn" >Cadastre-se</Button>
                                         <hr />
-                                        <Collapse horizontal id="collapse-msg-sign" >
-                                                <Alert
-                                                    color="danger"
-                                                >
-                                                    <p id="sign-msg"></p>
-                                                </Alert>
-                                        </Collapse>
+                                        <Button className="submit-btn" >Cadastre-se</Button>
                                     </Form>
                                 </div>
                             </Col>

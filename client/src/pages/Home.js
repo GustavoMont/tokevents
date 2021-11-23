@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Modal, ModalHeader, ModalBody, Form, 
-    FormGroup, Label, Input, Row, Col, Button, FormFeedback } from 'reactstrap'
+import {
+    Modal, ModalHeader, ModalBody, Form,
+    FormGroup, Label, Input, Row, Col,
+    Button, FormFeedback, Collapse, Alert
+} from 'reactstrap'
 import Add from "../Components/Add";
 import { randomBg } from '../utils/randomGenarate';
 import PostIt from '../Components/PostIt'
-import { formateDate } from '../utils/formateDate'
 import '../styles/Home.css'
+import { agendar } from "../utils/handleForms";
 
 export default function Home() {
     const bgColors = ['--postit-yellow', '--postit-pink', '--postit-green', '--postit-orange']
@@ -31,21 +34,21 @@ export default function Home() {
                 window.location.href = '/'
                 return
             };
-            events.forEach(evento =>{evento.color = randomBg(bgColors, 0, bgColors.length-1)})
-            setEventos(events)            
+            events.forEach(evento => { evento.color = randomBg(bgColors, 0, bgColors.length - 1) })
+            setEventos(events)
         })()
     }, [])
     document.body.style.overflow = openModal ? 'hidden' : 'auto'
 
     return (
-        <main id="home" 
-            
+        <main id="home"
+
         >
             <h1>HOME PAGE</h1>
             <div id="board">
                 {eventos.length === 0 ? 'NENHUM EVENTO ADICIONADO' : eventos.map(evento => (
                     <PostIt title={evento.title} description={evento.description} key={evento._id}
-                        data_inicio={formateDate(evento.data_inicio)}   data_fim={formateDate(evento.data_fim)} 
+                        data_inicio={evento.data_inicio} data_fim={evento.data_fim}
                         color={evento.color}
                     />
                 ))}
@@ -60,42 +63,7 @@ export default function Home() {
                     Agendar um Novo Evento
                 </ModalHeader>
                 <ModalBody>
-                    <Form action="/home/agendar" onSubmit={async (e) =>{
-                        e.preventDefault()
-                        const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
-                        const form = e.target
-                        let { 
-                            title, description,
-                            data_inicio, horas_inicio,
-                            data_fim, horas_fim
-                        } = form
-                        
-                        title = title.value
-                        description = description.value
-                        data_inicio = new Date(`${data_inicio.value}T${horas_inicio.value}`).toISOString()
-                        const bodyInfo = {title, description,
-                            data_inicio,
-                            user_id: `${token}`}
-                        if (data_fim.value) {
-                            data_fim = new Date(`${data_fim.value}T${horas_fim.value}`).toISOString()
-                            bodyInfo.data_fim = data_fim
-                        }
-                        const body = JSON.stringify(bodyInfo)
-                        
-                        const agendarRes = await fetch('/events/agendar', {
-                            method: 'POST',
-                            headers:{
-                                'Content-Type': 'application/json',
-                                auth: `Bearer ${token}`
-                            },
-                            body
-                        })
-                        const resultado = await agendarRes.json()
-                        if (resultado.erro) {
-                            
-                        }
-
-                    }} >
+                    <Form action="/home/agendar" onSubmit={(e) => agendar(e, setEventos, setOpenModal, eventos)} >
                         <FormGroup>
                             <Label for={"title"}>Título do Evento: <span>*</span></Label>
                             <Input
@@ -148,7 +116,7 @@ export default function Home() {
                                     <Label for="data_fim">Data de Fim:</Label>
                                     <Input id="data_fim" name="data_fim"
                                         placeholder="DD/MM/YYYY"
-                                        type="date"
+                                        type="date" required
                                     />
                                 </FormGroup>
                                 <FormFeedback>
@@ -160,12 +128,19 @@ export default function Home() {
                                     <Label for="data_fim">A que horas:</Label>
                                     <Input id="horas_fim" name="horas_fim"
                                         placeholder="16:00"
-                                        type="time"
+                                        type="time" required
                                     />
                                 </FormGroup>
                             </Col>
                         </Row>
 
+                        <Collapse horizontal id="collapse-msg-agendar" >
+                            <Alert
+                                color="danger"
+                            >
+                                <p id="agendar-msg"></p>
+                            </Alert>
+                        </Collapse>
                         <hr />
                         <Button color="success">
                             Submit
