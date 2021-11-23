@@ -3,7 +3,7 @@ const saveGoHome = (resultado) => {
     window.location.href = '/home'
 }
 
-const showServerMessage = (id, message) => {
+export const showServerMessage = (id, message) => {
     const msg = document.querySelector(`#${id}-msg`)
     document.querySelector(`#collapse-msg-${id}`).classList.add('show')
     msg.innerText = message
@@ -107,4 +107,46 @@ export const handleToken = async (token)=>{
     })
     const jsonRes = await homeResponse.json();
     return jsonRes.login
+}
+
+export const agendar = async (e, setEventos, setOpenModal, eventos) => {
+    e.preventDefault()
+    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
+    const form = e.target
+    let {
+        title, description,
+        data_inicio, horas_inicio,
+        data_fim, horas_fim
+    } = form
+
+    title = title.value
+    description = description.value
+    data_inicio = `${data_inicio.value}T${horas_inicio.value}:00.000+00:00`
+    const bodyInfo = {
+        title, description,
+        data_inicio,
+        user_id: `${token}`
+    }
+    if (data_fim.value) {
+        data_fim = `${data_fim.value}T${horas_fim.value}:00.000+00:00`
+        bodyInfo.data_fim = data_fim
+    }
+    const body = JSON.stringify(bodyInfo)
+
+    const agendarRes = await fetch('/events/agendar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            auth: `Bearer ${token}`
+        },
+        body
+    })
+    const resultado = await agendarRes.json()
+    if (resultado.erro) {
+        showServerMessage('agendar', resultado.message)
+        return
+    }
+    resultado.color = '--postit-green'
+    setEventos([resultado, ...eventos]);
+    setOpenModal(false)
 }
