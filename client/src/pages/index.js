@@ -30,7 +30,6 @@ export default function Index() {
                                         <Button className="submit-btn" type="submit" >Entrar</Button>
                                         <div  className="msg-container" >                                        
                                             <Collapse horizontal id="collapse-msg-login" >
-
                                                 <Alert
                                                     color="danger"
                                                 >
@@ -101,6 +100,14 @@ export default function Index() {
                                             </Col>
                                         </Row>
                                         <Button className="submit-btn" >Cadastre-se</Button>
+                                        <hr />
+                                        <Collapse horizontal id="collapse-msg-sign" >
+                                                <Alert
+                                                    color="danger"
+                                                >
+                                                    <p id="sign-msg"></p>
+                                                </Alert>
+                                        </Collapse>
                                     </Form>
                                 </div>
                             </Col>
