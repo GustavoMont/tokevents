@@ -43,9 +43,8 @@ router.post('/agendar', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const {id} = jwt.decode(req.body.id)
-        const events = await Event.find({id}, {user_id: 0})
-        ;
+        const { user_id } = jwt.decode(req.body.user_id)
+        const events = await Event.find({user_id}, {user_id: 0});
         res.status(200).json({events})
 
     } catch (error) {
