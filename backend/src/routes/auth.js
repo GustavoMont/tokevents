@@ -48,18 +48,15 @@ router.post('/signIn', async (req, res) => {
             res.status(400).json({erro: true, message: "Usuário já cadastrado" })
             return
         }
-
         user.save()
             .then(data => {
                 user.password = undefined
-                const { user_name, nome } = user
-                res.status(201).json({ token: generateToken(nome, user_name, id) })
-            })
-            .catch(err => { res.status(400).json({ message: err }) })
+                const { user_name, nome, id } = user
+                res.status(201).json({ token: generateToken(user_name, nome, id)})
+            }).catch(err => { res.status(400).json({erro: true, message: err }) })
     } catch (error) {
         res.status(500).json({erro: true, message: error.message})
     }
-
 })
 
 module.exports = router
