@@ -1,0 +1,45 @@
+.index-section{
+    min-height: 100vh;
+    position: relative;
+}
+.form-container {
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.form-container h1{
+    color: var(--main-color);
+}
+
+.form-container .submit-btn{
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.divider{
+    content: '';
+    width: min(92vw, 580px);
+    margin: .5rem auto;
+    background-color: var(--terciary-color);
+    height: 2px;
+}
+
+#cadastro{
+    position: relative;
+}
+
+.msg-container{
+    margin: 1rem 0;
+}
+
+@media(min-width: 992px){
+    #cadastro::before{
+        display: block;
+        content: '';
+        width: 2px;
+        height: 80vh;
+        position: absolute;
+        background-color: var(--terciary-color);
+        left: -1rem;
+    }
+}
