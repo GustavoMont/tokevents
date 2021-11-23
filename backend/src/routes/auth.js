@@ -17,17 +17,18 @@ router.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ $or: [{ "user_name": login }, { "email": login }] }, { "email": 1, "user_name": 1, "nome": 1 }).select('+password')
         if (!user) {
-            res.status(400).json({ message: "Usuário não cadastrado" })
+            res.status(400).json({erro:true, message: "Usuário não cadastrado" })
             return
         }
         if (! await argon2.verify(user.password, password)) {
-            res.status(400).json({ message: "Senha incorreta" })
+            res.status(400).json({erro: true, message: "Senha incorreta" })
             return
         }
         user.password = undefined
-        res.status(200).json({ user, token: generateToken(user.id) })
+        const { nome, user_name } = user
+        res.status(200).json({ user:{nome, user_name}, token: generateToken(user.id) })
     } catch (error) {
-        res.status(400).json({ message: error })
+        res.status(400).json({erro:true, message: error })
     }
 
 
@@ -42,15 +43,17 @@ router.post('/signIn', async (req, res) => {
             ...req.body,
             password: hash
         })
-        if ((await User.findOne({ "email": body.email }))) {
-            res.status(400).json({ message: "Usuário já cadastrado" })
+        const usuario = await User.findOne({$or:[{"email": body.email}, {'user_name': body.user_name}]})
+        if (usuario) {
+            res.status(400).json({erro: true, message: "Usuário já cadastrado" })
             return
         }
 
         user.save()
             .then(data => {
                 user.password = undefined
-                res.status(201).json({ user, token: generateToken(user.id) })
+                const { user_name, nome } = user
+                res.status(201).json({ user_name, nome, token: generateToken(user.id) })
             })
             .catch(err => { res.status(400).json({ message: err }) })
     } catch (error) {
