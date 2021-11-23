@@ -10,8 +10,6 @@ const showServerMessage = (id, message) => {
 }
 
 const handlePassword = (password) => {
-    console.log(password);
-    console.log(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password) && password.length <= 16);
     return(
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password) && password.length <= 16
 )}
@@ -56,7 +54,6 @@ export const handleSignIn = async (e) => {
     const children = Array.from(document.querySelectorAll('[data-field]'))
     children.forEach(input => {
         input.classList.remove('is-invalid')
-        console.log(input.classList);
     })
     let {email, user_name, nome, 
         cad_password, confirm} = form
@@ -95,7 +92,7 @@ export const handleSignIn = async (e) => {
     
     const resultado = await signInRes.json()
     if (resultado.erro) {
-        showServerMessage('cad', resultado.message)
+        showServerMessage('sign', resultado.message)
         return
     }
     saveGoHome(resultado)
@@ -108,7 +105,6 @@ export const handleToken = async (token)=>{
             'auth': token
         }
     })
-    const jsonRes = await homeResponse.json()
-    console.log(jsonRes);
+    const jsonRes = await homeResponse.json();
     return jsonRes.login
 }
