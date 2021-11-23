@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
         }
         user.password = undefined
         const { nome, user_name } = user
-        res.status(200).json({ user:{nome, user_name}, token: generateToken(user.id) })
+        res.status(200).json({ token: generateToken(user.id, user_name, nome) })
     } catch (error) {
         res.status(400).json({erro:true, message: error })
     }
@@ -53,7 +53,7 @@ router.post('/signIn', async (req, res) => {
             .then(data => {
                 user.password = undefined
                 const { user_name, nome } = user
-                res.status(201).json({ user_name, nome, token: generateToken(user.id) })
+                res.status(201).json({ token: generateToken(user.id, user_name, nome) })
             })
             .catch(err => { res.status(400).json({ message: err }) })
     } catch (error) {
