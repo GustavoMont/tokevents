@@ -25,7 +25,7 @@ export default function Index() {
                                         </FormGroup>
                                         <FormGroup>
                                             <Label for="password">Senha: </Label>
-                                            <Input type="text" name="password" id="password" required placeholder="Sua senha..." />
+                                            <Input type="password" name="password" id="password" required placeholder="Sua senha..." />
                                         </FormGroup>
                                         <Button className="submit-btn" type="submit" >Entrar</Button>
                                         <div  className="msg-container" >                                        
