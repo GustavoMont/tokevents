@@ -1,28 +1,69 @@
-export const handleLogin = async (e) =>{
-    e.preventDefault()
-    const form = e.target
-    const login = form.login.value
-    const senha = form.senha.value
-    const body = JSON.stringify({login, senha})
+const saveGoHome = (resultado) => {
+    sessionStorage.setItem('@tokevents', JSON.stringify(resultado))
+    window.location.href = '/home'
+}
+export const handleLogin  = async (e) =>{
+        e.preventDefault()
+        const form = e.target
 
-    console.log(form.action)
+        let {login, password} = form
+        login = login.value
+        password = password.value
+        const body = JSON.stringify( {
+            login, 
+            password
+        })
 
-    try {
-        const query = await fetch('/auth/login',{
+        const loginRes = await fetch('/auth/login', {
+            method: 'POST',
             headers:{
                 'Content-Type': 'application/json'
             },
-            method: form.getAttribute('method'),
             body
         })
-        const response = await query.json()
-        console.log(response)
-    } catch (error) {
-        console.error(error);
-    }
 
+        const resultado = await loginRes.json()
+        if (resultado.erro) {
+            alert(resultado.message)
+            return
+        }
+        saveGoHome(resultado)
 }
 
+
+export const handleSignIn = async (e) => {
+    e.preventDefault()
+    const form = e.target
+    let {email, user_name, nome, 
+        password, confirm} = form
+    
+    if (password.value !== confirm.value) {
+        alert('As senhas não estão iguais')
+        return
+    }
+    email = email.value
+    user_name = user_name.value
+    nome = nome.value
+    password = password.value
+    const body = JSON.stringify({
+        email, user_name, nome,
+        password
+    })
+    const signInRes = await fetch("/auth/signIn", {
+        method: "POST",
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body
+    })
+
+    const resultado = await signInRes.json()
+    if (resultado.erro) {
+        alert(resultado.message)
+        return
+    }
+    saveGoHome(resultado)
+} 
 export const handleToken = async (token)=>{
     const homeResponse = await fetch("/home", {
         method: 'GET',
@@ -32,6 +73,6 @@ export const handleToken = async (token)=>{
         }
     })
     const jsonRes = await homeResponse.json()
-
+    console.log(jsonRes);
     return jsonRes.login
 }
