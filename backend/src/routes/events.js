@@ -19,22 +19,23 @@ router.post('/agendar', async (req, res) => {
         if (data_fim) {
             if (new Date(data_inicio) > new Date(data_fim)) {
                 res.status(400).json({ erro: true, field: 'data_inicio' ,message: "A Data de Início não pode sre maior que a data do término" })
+                return
             }
         }
         if (find) {
-            res.status(400).json({ erro: true, field: 'header' ,message: "Evento já cadastrado" })
+            res.status(400).json({ erro: true, field: 'header', message: "Evento já cadastrado" })
             return
         }
-
         const event = new Event({
             ...body,
+            data_inicio,
+            data_fim,
             user_id
         })
-
         event.save()
         .then(data => {
-
-            res.status(201).json({info: event, message: "Evento Cadastrado com Sucesso"})}
+            event.user_id = undefined
+            res.status(201).json(event)}
         )
         .catch(err => res.status(400).json(err))
     } catch (error) {
