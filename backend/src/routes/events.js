@@ -54,4 +54,54 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.delete('/remove', async(req, res) =>{
+    try {
+        let { id, user_id } = req.body
+        user_id = jwt.decode(user_id).user_id
+        const event = await Event.findOne({$and:[{_id: id}, {user_id}]})
+        if (!event) {
+            res.status(401).json({erro: true, message: 'Ação não autorizada'})
+            return
+        }
+        Event.findOneAndDelete({_id: id}, (err, doc)=>{
+            if (err) {
+                res.status(400).json({erro: true, message: err.message})
+                return
+            }
+            res.status(200).json({message: "Evento deletado com sucesso"})
+        })
+    } catch (error) {
+        res.status(500).json({erro: true, message: error.message})
+    }
+    
+
+
+})
+
+router.put('/update', async (req, res) =>{
+    try {        
+        let {id, user_id, ...fields} = req.body
+
+        user_id = jwt.decode(user_id).user_id
+
+        const event = await Event.findOne({$and:[{id}, {user_id}]})
+
+        if (!event) {
+            res.status(401).json({erro: true, message: 'Alteração não autorizada'})
+            return
+        }
+        Event.findByIdAndUpdate({_id: id}, {...fields}, (err, doc) =>{
+            if (err) {
+                res.status(400).json({erro: true, message: err.message})
+                return
+            }
+            doc.user_id = undefined
+            res.status(200).json({doc})
+        })
+    } catch (error) {
+        res.status(500).json({erro: true, message: error.message})   
+    }
+})
+
+
 module.exports = router
