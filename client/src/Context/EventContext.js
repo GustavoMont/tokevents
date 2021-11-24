@@ -6,9 +6,9 @@ const Context = createContext()
 function EventProvider({children}){
     const [eventos, setEventos] = useState([]);
     const bgColors = ['--postit-yellow', '--postit-pink', '--postit-green', '--postit-orange']
+    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     useEffect(() => {
         (async () => {
-            const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
             const body = JSON.stringify({ user_id: token })
             const eventosRes = await fetch('/events', {
                 method: 'POST',
@@ -31,7 +31,7 @@ function EventProvider({children}){
     }, [])
 
     return (
-        <Context.Provider value={{eventos, setEventos }} >
+        <Context.Provider value={{eventos, setEventos, token }} >
             {children}
         </Context.Provider>
     )
