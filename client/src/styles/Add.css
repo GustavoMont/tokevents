@@ -7,7 +7,8 @@
     height: 45px;
     border-radius: 50%;
 
-    background-color: var(--main-color);
+    background-color: #001427;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 i{
