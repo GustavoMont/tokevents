@@ -20,6 +20,10 @@ const EventSchema = mongoose.Schema({
     data_fim:{
         type: Date
     },
+    complete:{
+        type: Boolean,
+        default: false
+    },
     createdAt:{
         type: Date,
         default: Date.now
