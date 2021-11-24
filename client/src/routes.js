@@ -9,6 +9,8 @@ import { Context } from './Context/AuthContext'
 import { useContext } from 'react'
 import { EventProvider } from './Context/EventContext'
 import Footer from './Components/Footer'
+import Board from './Components/Board'
+import Concluidos from './Components/Concluidos'
 
 
 const Private = ( { isAuth, children } ) => (
@@ -35,7 +37,11 @@ const Rotas = () => {
                             <Footer />
                         </EventProvider>
                     </Private>
-                }/>
+                }>
+                    <Route index element={<Board />} />
+                    <Route path="concluidos" element={<Concluidos />  } />
+
+                </Route>
             </Routes>
     )
 }
