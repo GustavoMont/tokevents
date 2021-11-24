@@ -32,15 +32,13 @@ export default function Home() {
         <main id="home"
         >
             <div>
-                <header  id="menu" >
-                    <Button
-                        id="menu-btn"
-                        color="primary"
-                        onClick={() => setOpenCanvas(true)}
-                    >
-                        <i className="fas fa-bars"  ></i>
-                    </Button>
-                    <h1>Meus eventos</h1>
+                <header  id="menu-container" >
+                    <div id="menu">
+                        <i className="fas fa-bars" id="menu-btn" 
+                            onClick={() => setOpenCanvas(true)}
+                        ></i>
+                        <h1>Meus eventos</h1>
+                    </div>
 
                 </header>
 
@@ -51,9 +49,12 @@ export default function Home() {
                     </OffcanvasHeader>
                     <OffcanvasBody>
                         <strong>
-                            <Link to="/home/concluidos" onClick={() =>{
+                            <Link to="/" onClick={() =>{
                                 sessionStorage.removeItem('@tokevents')
-                            }} >HOME</Link>
+                            }} >
+                                <i class="fas fa-sign-out-alt" style={{color: 'black', marginRight:'.5rem' }} ></i>  
+                                <span>Sair</span>
+                            </Link>
                         </strong>
                     </OffcanvasBody>
                 </Offcanvas>
