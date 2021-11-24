@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import Loading from "../Components/Loadings";
 import { handleToken } from "../utils/handleForms";
 
 const Context = createContext()
@@ -20,7 +21,7 @@ function AuthProvider({children}){
     }, [])
 
     if (loading) {
-        return(<h1>Loading</h1>)
+        return(<Loading />)
     }
 
     return (
