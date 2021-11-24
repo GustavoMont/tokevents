@@ -13,7 +13,7 @@ import { update, remove, concluir } from "../utils/handleForms";
 
 
 
-export default function PostIt({ title, description, data_inicio, data_fim, color, id }) {
+export default function PostIt({ info, isCompleted }) {
     const { setEventos, eventos } = useContext(Context);
     const [modalOpen, setModalOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false);
@@ -21,21 +21,21 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
     document.body.style.overflow = modalOpen ? 'hidden' : 'auto'
     return (
         <>
-            <div className="postit" style={{ backgroundColor: `var(${color})` }}
+            <div className={`postit`} style={{ backgroundColor: `${isCompleted ? 'gray' : info.color}` }}
                 onClick={() => {
                     setModalOpen(true)
                 }}
             >
                 <header>
-                    <h1>{title}</h1>
+                    <h1>{info.title}</h1>
                     <div id="options-container">
                         <div id="dot"></div>
                     </div>
                 </header>
                 <div className="desc">
-                    <p>{description.slice(0, 200) + '...'}</p>
+                    <p>{info.description.slice(0, 200) + '...'}</p>
                 </div>
-                <p className="data" >{formateDate(data_inicio)} {data_fim ? ' - ' : ''} {formateDate(data_fim) || ''}</p>
+                <p className="data" >{formateDate(info.data_inicio)} {info.data_fim ? ` - ${formateDate(info.data_fim)} ` : ''}</p>
 
 
             </div>
@@ -48,19 +48,21 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                     </Alert>
                 </Collapse>
                 <ModalHeader toggle={() => { setModalOpen(false); setOpenCollapse(false) }}>
-                    <h2>{title}</h2>
-                    <p className="data-modal">Do dia {formateDate(data_inicio)} à {formateDate(data_fim)}</p>
+                    <h2>{info.title}</h2>
+                    <p className="data-modal">Do dia {formateDate(info.data_inicio)} à {formateDate(info.data_fim)}</p>
                 </ModalHeader>
                 <ModalBody>
-                    {description}
+                    {info.description}
                 </ModalBody>
                 <hr />
                 <div className="post-it-btn">
-                    <Button color="success" onClick={() =>{
-                        concluir(id, eventos, setEventos, setModalOpen)
-                    }} >
-                        Concluir Evento
-                    </Button>
+                    {   isCompleted ? '' : (
+                        <Button color="success" onClick={() => {
+                            concluir(info.id, eventos, setEventos, setModalOpen)
+                        }} >
+                            Concluir Evento
+                        </Button>)
+                    }
                     <Button color="warning"
                         onClick={() => {
                             setOpenCollapse(!openCollapse);
@@ -81,13 +83,13 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                     {isEdit ? (<div className="form-container">
                         <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, id)} >
+                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, info.id)} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
                                     id="title"
                                     name="title"
-                                    placeholder={title}
+                                    placeholder={info.title}
                                     type="text"
                                 />
                             </FormGroup>
@@ -96,7 +98,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                                 <Input
                                     id="description"
                                     name="description"
-                                    placeholder={description}
+                                    placeholder={info.description}
                                     type="textarea"
                                 />
                             </FormGroup>
@@ -168,7 +170,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger" onClick={() => remove(id, setEventos, eventos, setModalOpen)}>
+                                <Button color="danger" onClick={() => remove(info.id, setEventos, eventos, setModalOpen)}>
                                     Confirmar
                                 </Button>
                                 <Button
