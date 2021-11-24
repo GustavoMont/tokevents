@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const authMiddleware = require('../middleware/auth')
 const Event = require('../models/Events')
+const { isInvalidDates } = require('../utils/handleDates')
 const jwt = require('jsonwebtoken')
 
 
@@ -12,16 +13,11 @@ router.post('/agendar', async (req, res) => {
         const { data_inicio, data_fim } = body
         const { user_id } = jwt.decode(body.user_id)
         const find = await Event.findOne({$and:[{data_inicio: new Date(data_inicio)}, {user_id}]})
-        if ((new Date(data_inicio) < new Date()) || new Date(data_fim) < new Date()) {
-            res.status(400).json({ erro: true, field:'data_inicio' ,message: "A data não pode ser anterior ao dia de Hoje" })
+        
+        if (isInvalidDates(data_inicio, data_fim, res)) {
             return
         }
-        if (data_fim) {
-            if (new Date(data_inicio) > new Date(data_fim)) {
-                res.status(400).json({ erro: true, field: 'data_inicio' ,message: "A Data de Início não pode sre maior que a data do término" })
-                return
-            }
-        }
+
         if (find) {
             res.status(400).json({ erro: true, field: 'header', message: "Evento já cadastrado" })
             return
@@ -81,9 +77,13 @@ router.delete('/remove', async(req, res) =>{
 
 router.put('/update', async (req, res) =>{
     try {        
-        let {id, user_id, ...fields} = req.body
+        let {id, user_id, data_inicio, data_fim ,...fields} = req.body
 
         user_id = jwt.decode(user_id).user_id
+        
+        if (isInvalidDates(data_inicio, data_fim, res)) {
+            return
+        }
 
         const event = await Event.findOne({$and:[{id}, {user_id}]})
 
