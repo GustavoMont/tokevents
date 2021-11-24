@@ -11,10 +11,11 @@ export default function Index() {
 
     return (
         <>
-            <main>
+            <main id="index">
                 <section className="index-section">
                     <Container>
                         <Row>
+                            <Col xs="12"><h1>Tokevents</h1></Col>
                             <Col md="6">
                                 <div className="form-container" >
                                     <div className="msg-container" >
@@ -26,7 +27,7 @@ export default function Index() {
                                             </Alert>
                                         </Collapse>
                                     </div>
-                                    <h1>Entrar</h1>
+                                    <h2>Entrar</h2>
                                     <Form onSubmit={handleLogin}>
                                         <FormGroup>
                                             <Label for="login">E-mail ou Usuário: </Label>
@@ -43,7 +44,7 @@ export default function Index() {
 
                             <Col md="6" >
                                 <div className="form-container" id="cadastro">
-                                    <h1>Cadastre-se</h1>
+                                    <h2>Cadastre-se</h2>
                                     <Collapse horizontal id="collapse-msg-sign" >
                                         <Alert
                                             color="danger"
