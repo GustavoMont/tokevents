@@ -57,7 +57,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                 <hr />
                 <div className="post-it-btn">
                     <Button color="success" onClick={() =>{
-                        concluir(id)
+                        concluir(id, eventos, setEventos, setModalOpen)
                     }} >
                         Concluir Evento
                     </Button>
