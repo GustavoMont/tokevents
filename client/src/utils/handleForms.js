@@ -163,8 +163,8 @@ export const update = async (e, setEventos, setModalOpen, eventos, id) =>{
     title = title.value || undefined
     description = description.value || undefined
 
-    data_inicio = formateToDB(data_inicio, horas_inicio)
-    data_fim = formateToDB(data_fim, horas_fim)
+    data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
+    data_fim = formateToDB(data_fim.value, horas_fim.value)
 
 
     const body = JSON.stringify({
