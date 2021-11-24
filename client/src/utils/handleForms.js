@@ -1,3 +1,4 @@
+import { formateToDB } from './formateDate'
 const saveGoHome = (resultado) => {
     sessionStorage.setItem('@tokevents', JSON.stringify(resultado))
     window.location.href = '/home'
@@ -109,7 +110,7 @@ export const handleToken = async (token)=>{
     return jsonRes.login
 }
 
-export const agendar = async (e, setEventos, setOpenModal, eventos) => {
+export const agendar = async (e, setEventos, setOpenModal, eventos, id) => {
     e.preventDefault()
     const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     const form = e.target
@@ -118,22 +119,21 @@ export const agendar = async (e, setEventos, setOpenModal, eventos) => {
         data_inicio, horas_inicio,
         data_fim, horas_fim
     } = form
-
     title = title.value
     description = description.value
-    data_inicio = `${data_inicio.value}T${horas_inicio.value}:00.000+00:00`
+    data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
+    data_fim = formateToDB(data_fim.value, horas_fim.value)
     const bodyInfo = {
         title, description,
         data_inicio,
-        user_id: `${token}`
+        data_fim,
+        user_id: `${token}`,
+        id
     }
-    if (data_fim.value) {
-        data_fim = `${data_fim.value}T${horas_fim.value}:00.000+00:00`
-        bodyInfo.data_fim = data_fim
-    }
+    
+    
     const body = JSON.stringify(bodyInfo)
-
-    const agendarRes = await fetch('/events/agendar', {
+    const agendarRes = await fetch(`/events/agendar`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -141,6 +141,7 @@ export const agendar = async (e, setEventos, setOpenModal, eventos) => {
         },
         body
     })
+    
     const resultado = await agendarRes.json()
     if (resultado.erro) {
         showServerMessage('agendar', resultado.message)
@@ -149,4 +150,68 @@ export const agendar = async (e, setEventos, setOpenModal, eventos) => {
     resultado.color = '--postit-green'
     setEventos([resultado, ...eventos]);
     setOpenModal(false)
+}
+
+export const update = async (e, setEventos, setModalOpen, eventos, id) =>{
+    e.preventDefault()
+    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
+    const form = e.target
+    let { title, description,
+        data_inicio, horas_inicio,
+        data_fim, horas_fim
+    } = form
+    title = title.value || undefined
+    description = description.value || undefined
+
+    data_inicio = formateToDB(data_inicio, horas_inicio)
+    data_fim = formateToDB(data_fim, horas_fim)
+
+
+    const body = JSON.stringify({
+        id, data_inicio, data_fim,
+        title, description, user_id: token
+    })
+
+    const updateRes = await fetch('/events/update', {
+        method: 'PUT',
+        headers:{
+            'Content-Type': 'application/json',
+            auth: `Bearer ${token}`
+        },
+        body
+    })
+    const resultado = await updateRes.json()
+    if (resultado.erro) {
+        showServerMessage('editar', resultado.message)
+        return
+    }
+    const naoAlterados = eventos.filter(evento => evento._id !== id )
+
+    setEventos([resultado, ...naoAlterados])
+    setModalOpen(false)
+}
+
+export const remove = async (id, setEventos, eventos, setModalOpen) => {
+    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
+    const body = JSON.stringify({
+        id: id,
+        user_id: token
+    })
+    const removeReq = await fetch('/events/remove', {
+        method:'DELETE',
+        headers:{
+            'Content-Type': 'application/json',
+            auth: `Bearer ${token}`
+        },
+        body
+    })
+    const resultado = await removeReq.json()
+    if (resultado.erro) {
+        showServerMessage('deletar', resultado.message)
+        return
+    }
+    const eventosAtuais = eventos.filter(evento => evento._id !== id)
+    setEventos(eventosAtuais)
+    setModalOpen(false)
+    
 }
