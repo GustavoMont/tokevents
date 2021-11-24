@@ -6,7 +6,8 @@ import {
     Modal, ModalHeader, ModalBody,
     Form, FormGroup, Label,
     Input, Row, Col, Alert, FormFeedback,
-    Button, Collapse, Offcanvas, OffcanvasHeader, OffcanvasBody
+    Button, Collapse, Offcanvas, OffcanvasHeader, 
+    OffcanvasBody, Spinner
 } from 'reactstrap'
 import Add from "../Components/Add";
 import PostIt from '../Components/PostIt'
@@ -58,7 +59,7 @@ export default function Home() {
                 </Offcanvas>
             </div>
             <div id="board">
-                {eventos.length === 0 ? 'NENHUM EVENTO ADICIONADO' : eventos.map(evento => (
+                {eventos.length === 0 ? <Spinner style={{alignSelf:'center'}} color="light" ></Spinner> : eventos.map(evento => (
                     <PostIt title={evento.title} description={evento.description} key={evento._id} id={evento._id}
                         data_inicio={evento.data_inicio} data_fim={evento.data_fim}
                         color={evento.color}
