@@ -1,9 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useState } from "react";
-import { Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Label, 
+import { Link } from 'react-router-dom'
+import {
+    Modal, ModalHeader, ModalBody,
+    Form, FormGroup, Label,
     Input, Row, Col, Alert, FormFeedback,
-    Button, Collapse } from 'reactstrap'
+    Button, Collapse, Offcanvas, OffcanvasHeader, OffcanvasBody
+} from 'reactstrap'
 import Add from "../Components/Add";
 import PostIt from '../Components/PostIt'
 import '../styles/Home.css'
@@ -13,14 +16,45 @@ import { agendar } from '../utils/handleForms'
 export default function Home() {
     const { eventos, setEventos } = useContext(Context)
     const [openModal, setOpenModal] = useState(false);
+    const [openCanvas, setOpenCanvas] = useState(false)
 
     document.body.style.overflow = openModal ? 'hidden' : 'auto'
-
+    window.onscroll = () =>{
+        const menu = document.querySelector('#menu')
+        const menuHeigth = menu.clientHeight
+        const board = document.querySelector('#board')
+        const boardPos = board.getBoundingClientRect().top
+        menu.classList.toggle('bg-active', boardPos <= menuHeigth )
+    }
     return (
         <main id="home"
-
         >
-            <h1>HOME PAGE</h1>
+            <div>
+                <header  id="menu" >
+                    <Button
+                        id="menu-btn"
+                        color="primary"
+                        onClick={() => setOpenCanvas(true)}
+                    >
+                        <i className="fas fa-bars"  ></i>
+                    </Button>
+                    <h1>Meus eventos</h1>
+
+                </header>
+
+                <Offcanvas toggle={() => setOpenCanvas(false)} isOpen={openCanvas} >
+                    <OffcanvasHeader toggle={() => setOpenCanvas(false)}>
+                        Offcanvas
+                    </OffcanvasHeader>
+                    <OffcanvasBody>
+                        <strong>
+                            <Link to="/home/concluidos" onClick={() =>{
+                                sessionStorage.removeItem('@tokevents')
+                            }} >HOME</Link>
+                        </strong>
+                    </OffcanvasBody>
+                </Offcanvas>
+            </div>
             <div id="board">
                 {eventos.length === 0 ? 'NENHUM EVENTO ADICIONADO' : eventos.map(evento => (
                     <PostIt title={evento.title} description={evento.description} key={evento._id} id={evento._id}
