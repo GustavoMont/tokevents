@@ -7,6 +7,7 @@ import Index from './pages'
 import Home from './pages/Home'
 import { Context } from './Context/AuthContext'
 import { useContext } from 'react'
+import { EventProvider } from './Context/EventContext'
 
 
 const Private = ( { isAuth, children } ) => (
@@ -23,7 +24,9 @@ const Routes = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/home" element={
                     <Private isAuth={isAuth} >
-                        <Home />
+                        <EventProvider>
+                            <Home />
+                        </EventProvider>
                     </Private>
                 } />
             </Manager>
