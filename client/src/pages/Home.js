@@ -1,43 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import {
-    Modal, ModalHeader, ModalBody, Form,
-    FormGroup, Label, Input, Row, Col,
-    Button, FormFeedback, Collapse, Alert
-} from 'reactstrap'
+import React, { useContext, useState } from "react";
+import { Modal, ModalHeader, ModalBody,
+    Form, FormGroup, Label, 
+    Input, Row, Col, Alert, FormFeedback,
+    Button, Collapse } from 'reactstrap'
 import Add from "../Components/Add";
-import { randomBg } from '../utils/randomGenarate';
 import PostIt from '../Components/PostIt'
 import '../styles/Home.css'
-import { agendar } from "../utils/handleForms";
+import { Context } from '../Context/EventContext'
+import { agendar } from '../utils/handleForms'
 
 export default function Home() {
-    const bgColors = ['--postit-yellow', '--postit-pink', '--postit-green', '--postit-orange']
+    const { eventos, setEventos } = useContext(Context)
     const [openModal, setOpenModal] = useState(false);
-    const [eventos, setEventos] = useState([])
 
-
-    useEffect(() => {
-        (async () => {
-            const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
-            const body = JSON.stringify({ user_id: token })
-            const eventosRes = await fetch('/events', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'auth': `Bearer ${token}`
-                },
-                body
-            })
-            const { events } = await eventosRes.json()
-            if (eventos.erro) {
-                window.location.href = '/'
-                return
-            };
-            events.forEach(evento => { evento.color = randomBg(bgColors, 0, bgColors.length - 1) })
-            setEventos(events)
-        })()
-    }, [])
     document.body.style.overflow = openModal ? 'hidden' : 'auto'
 
     return (
@@ -47,7 +23,7 @@ export default function Home() {
             <h1>HOME PAGE</h1>
             <div id="board">
                 {eventos.length === 0 ? 'NENHUM EVENTO ADICIONADO' : eventos.map(evento => (
-                    <PostIt title={evento.title} description={evento.description} key={evento._id}
+                    <PostIt title={evento.title} description={evento.description} key={evento._id} id={evento._id}
                         data_inicio={evento.data_inicio} data_fim={evento.data_fim}
                         color={evento.color}
                     />
@@ -63,7 +39,8 @@ export default function Home() {
                     Agendar um Novo Evento
                 </ModalHeader>
                 <ModalBody>
-                    <Form action="/home/agendar" onSubmit={(e) => agendar(e, setEventos, setOpenModal, eventos)} >
+                    <Form action="/events/agendar" method="POST"
+                        onSubmit={(e) => agendar(e, setEventos, setOpenModal, eventos)} >
                         <FormGroup>
                             <Label for={"title"}>Título do Evento: <span>*</span></Label>
                             <Input
