@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
 import {
@@ -7,7 +7,7 @@ import {
     Form, FormGroup, Label,
     Input, Row, Col, Alert, FormFeedback,
     Button, Collapse, Offcanvas, OffcanvasHeader, 
-    OffcanvasBody, Spinner
+    OffcanvasBody
 } from 'reactstrap'
 import Add from "../Components/Add";
 import PostIt from '../Components/PostIt'
@@ -19,7 +19,7 @@ export default function Home() {
     const { eventos, setEventos, token } = useContext(Context)
     const [openModal, setOpenModal] = useState(false);
     const [openCanvas, setOpenCanvas] = useState(false)
-
+    const [naoConcluidos, setNaoConcluidos] = useState([])
     document.body.style.overflow = openModal ? 'hidden' : 'auto'
     window.onscroll = () =>{
         const menu = document.querySelector('#menu')
@@ -28,9 +28,17 @@ export default function Home() {
         const boardPos = board.getBoundingClientRect().top
         menu.classList.toggle('bg-active', boardPos <= menuHeigth )
     }
+
+    useEffect(() =>{
+        const naoConcluidos = eventos.filter(evento => !(evento.complete || 
+            new Date(evento.data_fim) < new Date()))
+        setNaoConcluidos(naoConcluidos)
+    },[eventos])
+
     return (
         <main id="home"
         >
+            {/* Cabeçalho =============== */}
             <div>
                 <header  id="menu-container" >
                     <div id="menu">
@@ -41,7 +49,7 @@ export default function Home() {
                     </div>
 
                 </header>
-
+                {/* Menu de opção ============================= */}
                 <Offcanvas toggle={() => setOpenCanvas(false)} isOpen={openCanvas} >
                     <OffcanvasHeader toggle={() => setOpenCanvas(false)}>
                         <h4>{jwt.decode(token).nome}</h4>
@@ -59,8 +67,11 @@ export default function Home() {
                     </OffcanvasBody>
                 </Offcanvas>
             </div>
+
+            {/* Aqui vem os eventos cadastrados ============================================ */}
+
             <div id="board">
-                {eventos.length === 0 ? <Spinner style={{alignSelf:'center'}} color="light" ></Spinner> : eventos.map(evento => (
+                {naoConcluidos.length === 0 ? <h1>NENHUM EVENTO CADASTRADO</h1> : naoConcluidos.map(evento => (
                     <PostIt title={evento.title} description={evento.description} key={evento._id} id={evento._id}
                         data_inicio={evento.data_inicio} data_fim={evento.data_fim}
                         color={evento.color}
