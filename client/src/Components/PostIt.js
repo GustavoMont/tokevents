@@ -1,12 +1,15 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../Context/EventContext";
-import { Modal, ModalBody, ModalHeader, 
+import {
+    Modal, ModalBody, ModalHeader,
     Button, Alert,
-    Form, FormGroup, Label, 
-    Input, Row, Col, FormFeedback, Collapse } from 'reactstrap'
+    Form, FormGroup, Label,
+    Input, Row, Col, FormFeedback, Collapse
+} from 'reactstrap'
 import '../styles/Postit.css'
 import { formateDate } from "../utils/formateDate";
-import { update } from "../utils/handleForms";
+import { update, remove } from "../utils/handleForms";
+
 
 
 
@@ -39,6 +42,13 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
 
             </div>
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} >
+                <Collapse horizontal id="collapse-msg-deletar" >
+                    <Alert
+                        color="danger"
+                    >
+                        <p id="deletar-msg"></p>
+                    </Alert>
+                </Collapse>
                 <ModalHeader toggle={() => { setModalOpen(false); setOpenCollapse(false) }}>
                     {modalContent.title}
                 </ModalHeader>
@@ -69,7 +79,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                 <Collapse isOpen={openCollapse}>
                     {isEdit ? (<div className="form-container">
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) =>  update(e, setEventos, setModalOpen, eventos, modalContent.id)} >
+                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, modalContent.id)} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
@@ -130,17 +140,17 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                                         <Label for="data_fim">A que horas:</Label>
                                         <Input id="horas_fim" name="horas_fim"
                                             placeholder="16:00"
-                                            type="time" 
+                                            type="time"
                                         />
                                     </FormGroup>
                                 </Col>
                             </Row>
 
-                            <Collapse horizontal id="collapse-msg-agendar" >
+                            <Collapse horizontal id="collapse-msg-editar" >
                                 <Alert
                                     color="danger"
                                 >
-                                    <p id="agendar-msg"></p>
+                                    <p id="editar-msg"></p>
                                 </Alert>
                             </Collapse>
                             <hr />
@@ -156,7 +166,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger">
+                                <Button color="danger" onClick={() => remove(modalContent.id, setEventos, eventos, setModalOpen)}>
                                     Confirmar
                                 </Button>
                                 <Button
