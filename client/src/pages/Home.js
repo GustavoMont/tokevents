@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useState } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import jwt from 'jsonwebtoken'
 import {
     Modal, ModalHeader, ModalBody,
     Form, FormGroup, Label,
@@ -14,7 +15,7 @@ import { Context } from '../Context/EventContext'
 import { agendar } from '../utils/handleForms'
 
 export default function Home() {
-    const { eventos, setEventos } = useContext(Context)
+    const { eventos, setEventos, token } = useContext(Context)
     const [openModal, setOpenModal] = useState(false);
     const [openCanvas, setOpenCanvas] = useState(false)
 
@@ -44,7 +45,8 @@ export default function Home() {
 
                 <Offcanvas toggle={() => setOpenCanvas(false)} isOpen={openCanvas} >
                     <OffcanvasHeader toggle={() => setOpenCanvas(false)}>
-                        Offcanvas
+                        <h4>{jwt.decode(token).nome}</h4>
+                        <h5>@{jwt.decode(token).user_name}</h5>
                     </OffcanvasHeader>
                     <OffcanvasBody>
                         <strong>
