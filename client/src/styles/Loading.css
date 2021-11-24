@@ -1,0 +1,13 @@
+#loading-container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-color);
+}
+
+.spinner-border{
+    width: 8rem !important;
+    height: 8rem !important;
+}
