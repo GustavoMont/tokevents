@@ -24,7 +24,8 @@ function EventProvider({children}){
                 return
             };
             events.forEach(evento => { 
-                evento.color = randomBg(bgColors, 0, bgColors.length - 1) })
+                evento.color =  `var(${randomBg(bgColors, 0, bgColors.length - 1)})` 
+            })
             setEventos(events)
         })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
