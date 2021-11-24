@@ -8,14 +8,13 @@ import {
 } from 'reactstrap'
 import '../styles/Postit.css'
 import { formateDate } from "../utils/formateDate";
-import { update, remove } from "../utils/handleForms";
+import { update, remove, concluir } from "../utils/handleForms";
 
 
 
 
 export default function PostIt({ title, description, data_inicio, data_fim, color, id }) {
     const { setEventos, eventos } = useContext(Context);
-    const [modalContent, setModalContent] = useState({})
     const [modalOpen, setModalOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false);
     const [openCollapse, setOpenCollapse] = useState(false)
@@ -24,7 +23,6 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
         <>
             <div className="postit" style={{ backgroundColor: `var(${color})` }}
                 onClick={() => {
-                    setModalContent({ title, description, data_inicio, data_fim, id })
                     setModalOpen(true)
                 }}
             >
@@ -50,14 +48,17 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                     </Alert>
                 </Collapse>
                 <ModalHeader toggle={() => { setModalOpen(false); setOpenCollapse(false) }}>
-                    {modalContent.title}
+                    <h2>{title}</h2>
+                    <p className="data-modal">Do dia {formateDate(data_inicio)} à {formateDate(data_fim)}</p>
                 </ModalHeader>
                 <ModalBody>
-                    {modalContent.description}
+                    {description}
                 </ModalBody>
                 <hr />
                 <div className="post-it-btn">
-                    <Button color="success">
+                    <Button color="success" onClick={() =>{
+                        concluir(id)
+                    }} >
                         Concluir Evento
                     </Button>
                     <Button color="warning"
@@ -78,14 +79,15 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
 
                 <Collapse isOpen={openCollapse}>
                     {isEdit ? (<div className="form-container">
+                        <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, modalContent.id)} >
+                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, id)} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
                                     id="title"
                                     name="title"
-                                    placeholder={modalContent.title}
+                                    placeholder={title}
                                     type="text"
                                 />
                             </FormGroup>
@@ -94,7 +96,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                                 <Input
                                     id="description"
                                     name="description"
-                                    placeholder={modalContent.description}
+                                    placeholder={description}
                                     type="textarea"
                                 />
                             </FormGroup>
@@ -166,7 +168,7 @@ export default function PostIt({ title, description, data_inicio, data_fim, colo
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger" onClick={() => remove(modalContent.id, setEventos, eventos, setModalOpen)}>
+                                <Button color="danger" onClick={() => remove(id, setEventos, eventos, setModalOpen)}>
                                     Confirmar
                                 </Button>
                                 <Button
