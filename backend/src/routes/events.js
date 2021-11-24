@@ -87,7 +87,23 @@ router.put('/update', async (req, res) =>{
     }
 })
 
-
+router.put('/concluir', async (req, res) =>{
+    try {
+        let { id, user_id } = req.body
+        user_id = jwt.decode(user_id).user_id
+        
+        
+        const event = await Event.findOneAndUpdate({'_id': id  ,user_id}, {complete: true})
+        if (!event) {
+            res.status(401).json({erro: true, message: 'Alteração não autorizada'})
+            return
+        }    
+        const eventUpdated = await Event.findOne({'_id': id  ,user_id})
+        res.status(200).json(eventUpdated)
+    } catch (error) {
+        res.status(500).json({erro: true, message: error.message})   
+    }
+})
 
 
 module.exports = router
