@@ -215,3 +215,31 @@ export const remove = async (id, setEventos, eventos, setModalOpen) => {
     setModalOpen(false)
     
 }
+
+export const concluir = async (id, eventos ,setEventos, setModalOpen) => {
+    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
+    const body = JSON.stringify({
+        id,
+        user_id: token
+    })
+    console.log(body);
+    const concluirReq = await fetch('/events/concluir', {
+        method: 'PUT',
+        headers:{
+            'Content-Type': 'application/json',
+            auth: `Bearer ${token}`
+        },
+        body
+    })
+
+    const resultado = await concluirReq.json()
+    console.log(resultado);
+    if (resultado.erro) {
+        showFeedBack('editar', resultado.message)
+        return   
+    }
+
+    const naoConcluidos = eventos.filter(evento => evento._id !== id)
+    setModalOpen(false)
+    setEventos(naoConcluidos)
+}
