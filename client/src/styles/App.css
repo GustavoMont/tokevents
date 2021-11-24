@@ -7,7 +7,9 @@
 :root{
     --main-color: rgba(84, 149, 201, 1);
     --analog-main-dark: rgba(3, 37, 108, 1);
-
+    --secondary-color: #ef476f;
+    --terciary-color: #06d6a0;
+    
     --postit-yellow: #f1e41b;
     --postit-pink: #ff8d9c;
     --postit-green: #79cbc5;
