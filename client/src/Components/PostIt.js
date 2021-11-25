@@ -13,12 +13,12 @@ import { showServerMessage } from '../utils/handleForms'
 
 
 
-export default function PostIt({ info, isCompleted }) {
+export default function PostIt({ info, isCompleted }) { /*isCompleted informa se são os eventos COncluídos ou não */
     const { setNaoConcluidos, naoConcluidos,
-    setConcluidos, concluidos, token } = useContext(Context);
-    const [modalOpen, setModalOpen] = useState(false)
-    const [isEdit, setIsEdit] = useState(false);
-    const [openCollapse, setOpenCollapse] = useState(false)
+    setConcluidos, concluidos, token } = useContext(Context); //Contexto Event Provider 
+    const [modalOpen, setModalOpen] = useState(false) //Abre fecha o modal
+    const [isEdit, setIsEdit] = useState(false); // Fala se é um Collapse de edição ou não
+    const [openCollapse, setOpenCollapse] = useState(false) // Abre ou fecha o Collapse
     document.body.style.overflow = modalOpen ? 'hidden' : 'auto'
     return (
         <>
@@ -34,14 +34,15 @@ export default function PostIt({ info, isCompleted }) {
                     </div>
                 </header>
                 <div className="desc">
-                    <p>{info.description.slice(0, 200) + '...'}</p>
+                    <p>{info.description.slice(0, 200) + '...'}</p> {/*Mostra apenas os 200 primeiros caracteres */}
                 </div>
                 <p className="data" >{formateDate(info.data_inicio)} {info.data_fim ? ` - ${formateDate(info.data_fim)} ` : ''}</p>
 
 
             </div>
+            {/* Modal para mostrar com mais informações o evento do post it */}
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} >
-                <Collapse horizontal id="collapse-msg-erro" >
+                <Collapse horizontal id="collapse-msg-erro" > {/*Exibe mensagem de erro para concluir ou remover evento */}
                     <Alert
                         color="danger"
                     >
@@ -56,9 +57,11 @@ export default function PostIt({ info, isCompleted }) {
                     {info.description}
                 </ModalBody>
                 <hr />
+                {/* Se isCompleted não mostre o butão de edição */}
                 <div className="post-it-btn">
                     {isCompleted ? '' : (
                         <Button color="success" onClick={async () => {
+                            // Função para concluir um evento 
                             const resultado = await alterFetch( '/events/concluir' ,token, info._id, 'PUT')
 
                             if (resultado.erro) {
@@ -73,6 +76,7 @@ export default function PostIt({ info, isCompleted }) {
                             Concluir Evento
                         </Button>)
                     }
+                    {/* Se isCompleted não mostre o butão de edição */}
                     {isCompleted ? '' : (
                         <Button color="warning"
                             onClick={() => {
@@ -91,6 +95,7 @@ export default function PostIt({ info, isCompleted }) {
                 </div>
 
                 <Collapse isOpen={openCollapse}>
+                    {/* Formulário de edição do evento */}
                     {isEdit ? (<div className="form-container">
                         <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
@@ -103,7 +108,7 @@ export default function PostIt({ info, isCompleted }) {
                                 } = form
                                 title = title.value || undefined
                                 description = description.value || undefined
-                            
+                                // Formatando a data para o banco de dados
                                 data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
                                 data_fim = formateToDB(data_fim.value, horas_fim.value)
                             
@@ -209,6 +214,7 @@ export default function PostIt({ info, isCompleted }) {
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
                                 <Button color="danger" onClick={async () => {
+                                    // Função que faz a exclusão do evento
                                     const resultado = await alterFetch('/events/remove', token, info._id, 'DELETE')
                                     if (resultado.erro) {
                                         showServerMessage('erro', resultado.message)

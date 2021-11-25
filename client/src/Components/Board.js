@@ -28,13 +28,17 @@ export default function Board(){
 
     return (
         <>
+        {/* A div board contém o conteúdo principal da página home */}
         <div id="board">
+                {/* Renderiza os Post its na página. APenas os eventos não concluídos */}
                 {naoConcluidos.length === 0 ? <h1>NENHUM EVENTO CADASTRADO</h1> : naoConcluidos.map(evento => (
                     <PostIt info={{...evento}} key={evento._id} 
                     />
                 ))}
             </div>
+            {/* Component Add. Botão */}
             <Add click={() => setOpenModal(true)} />
+            {/* Formulário de cadastro do novo evento */}
             <Modal
                 toggle={() => setOpenModal(false)}
                 isOpen={openModal}
