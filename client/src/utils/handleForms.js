@@ -153,7 +153,6 @@ export const agendar = async (e, setEventos, setOpenModal, eventos, id) => {
 }
 
 export const update = async (e, setNaoConcluidos, setModalOpen, naoConcluidos, id) =>{
-    console.log(id);
     e.preventDefault()
     const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     const form = e.target
@@ -225,7 +224,6 @@ export const concluir = async (id, naoConcluidos, setNaoConcluidos, concluidos, 
         id,
         user_id: token
     })
-    console.log(body);
     const concluirReq = await fetch('/events/concluir', {
         method: 'PUT',
         headers:{
