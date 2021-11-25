@@ -11,13 +11,13 @@ import { Context } from '../Context/EventContext'
 
 
 export default function Home() {
-    const [openCanvas, setOpenCanvas] = useState(false)
-    const { token } = useContext(Context)
+    const [openCanvas, setOpenCanvas] = useState(false) /*Vai abrir ou fechar o menu */
+    const { token } = useContext(Context) /*Token passado pelo contexto de eventos EventeProvider */
 
     return (
         <main id="home"
         >
-            {/* Cabeçalho =============== */}
+            {/* Cabeçalho =================================================== */}
             <div>
                 <header  id="menu-container" >
                     <div id="menu">
@@ -28,11 +28,11 @@ export default function Home() {
                     </div>
 
                 </header>
-                {/* Menu de opção ============================= */}
+                {/* Menu de opção ========================================= */}
                 <Offcanvas toggle={() => setOpenCanvas(false)} isOpen={openCanvas} >
                     <OffcanvasHeader toggle={() => setOpenCanvas(false)}>
-                        <h4>{jwt.decode(token).nome}</h4>
-                        <h5>@{jwt.decode(token).user_name}</h5>
+                        <h4>{jwt.decode(token).nome}</h4> {/*Nome do usuário que está armazenado no token */}
+                        <h5>@{jwt.decode(token).user_name}</h5> {/*User name que está armazenado no token */}
                     </OffcanvasHeader>
                     <OffcanvasBody id="nav-container">
                         <nav>
@@ -61,7 +61,8 @@ export default function Home() {
                 </Offcanvas>
             </div>
 
-            {/* Aqui vem os eventos cadastrados ============================================ */}
+            {/* Aqui vem o Board(eventos não concluídos
+                ou os Elementos concluídos). Dependendo da rota em que o usuário se encontra ============================================ */}
             <Outlet />
             
         </main>
