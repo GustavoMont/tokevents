@@ -1,5 +1,8 @@
+// Faz as requisições para fazer as alterações nos eventos (remover, concluir, e editar)
 export const alterFetch = async (action ,token, id, method, bodyForm) =>{
-    const body = bodyForm || JSON.stringify({
+    // Cada parâmetro recebido vai dizer o que a requisição deve fazer
+    // Caso não tenha o parâmetro bodyForm ele atribui esse JSON padrão
+    const body = bodyForm || JSON.stringify({ 
         id,
         user_id: token
     })
