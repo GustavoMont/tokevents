@@ -37,13 +37,13 @@ export default function Home() {
                     <OffcanvasBody id="nav-container">
                         <nav>
                             <strong>
-                                <Link to="/home" >
+                                <Link to="/home" onClick={() => setOpenCanvas(false)} >
                                     <i class="far fa-calendar-alt" style={{color: 'black', marginRight:'.5rem' }} ></i>  
                                     <span>Meus Eventos</span>
                                 </Link>
                             </strong>
                             <strong>
-                                <Link to="/home/concluidos" >
+                                <Link to="/home/concluidos" onClick={() => setOpenCanvas(false)} >
                                     <i class="fas fa-check" style={{color: 'black', marginRight:'.5rem' }} ></i>  
                                     <span>Eventos Concluídos</span>
                                 </Link>
