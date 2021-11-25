@@ -50,6 +50,25 @@ main#home{
     color: #fff;
 }
 
+#nav-container nav{
+    display: flex;
+    flex-direction: column;
+}
+
+#nav-container nav a{
+    border: 1px solid rgb(73, 72, 72);
+    border-left: transparent;
+    border-right: transparent;
+    display: inline-block;
+    padding: .7rem 0;
+    width: 100%;
+    margin: .2rem 0;
+    transition: all 1s ease;
+}
+
+#nav-container nav a:hover{
+    background: rgba(56, 56, 56, 0.192);
+}
 
 @media(min-width: 550px) {
     #board{

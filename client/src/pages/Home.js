@@ -34,15 +34,29 @@ export default function Home() {
                         <h4>{jwt.decode(token).nome}</h4>
                         <h5>@{jwt.decode(token).user_name}</h5>
                     </OffcanvasHeader>
-                    <OffcanvasBody>
-                        <strong>
-                            <Link to="/" onClick={() =>{
-                                sessionStorage.removeItem('@tokevents')
-                            }} >
-                                <i class="fas fa-sign-out-alt" style={{color: 'black', marginRight:'.5rem' }} ></i>  
-                                <span>Sair</span>
-                            </Link>
-                        </strong>
+                    <OffcanvasBody id="nav-container">
+                        <nav>
+                            <strong>
+                                <Link to="/home" >
+                                    <i class="far fa-calendar-alt" style={{color: 'black', marginRight:'.5rem' }} ></i>  
+                                    <span>Meus Eventos</span>
+                                </Link>
+                            </strong>
+                            <strong>
+                                <Link to="/home/concluidos" >
+                                    <i class="fas fa-check" style={{color: 'black', marginRight:'.5rem' }} ></i>  
+                                    <span>Eventos Concluídos</span>
+                                </Link>
+                            </strong>
+                            <strong>
+                                <Link to="/" onClick={() =>{
+                                    sessionStorage.removeItem('@tokevents')
+                                }} >
+                                    <i class="fas fa-sign-out-alt" style={{color: 'black', marginRight:'.5rem' }} ></i>  
+                                    <span>Sair</span>
+                                </Link>
+                            </strong>
+                        </nav>
                     </OffcanvasBody>
                 </Offcanvas>
             </div>
