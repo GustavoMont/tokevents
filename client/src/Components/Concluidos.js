@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useContext} from "react";
 import { Context } from "../Context/EventContext";
 import PostIt from "./PostIt";
 
@@ -6,8 +6,7 @@ import PostIt from "./PostIt";
 
 
 export default function Concluidos(){
-    const [concluidos, setConcluidos] = useState([])
-    const { eventos } = useContext(Context)
+    const {concluidos} = useContext(Context)
     window.onscroll = () =>{
         const menu = document.querySelector('#menu')
         const menuHeigth = menu.clientHeight
@@ -16,11 +15,6 @@ export default function Concluidos(){
         menu.classList.toggle('bg-active', boardPos <= menuHeigth )
     }
 
-    useEffect(() =>{
-        const concluidos = eventos.filter(evento => (evento.complete || 
-            new Date(evento.data_fim) < new Date()))
-        setConcluidos(concluidos)
-    },[eventos])
     return (
         <div id="board">
                 {concluidos.length === 0 ? <h1>NENHUM EVENTO CADASTRADO</h1> : concluidos.map(evento => (
