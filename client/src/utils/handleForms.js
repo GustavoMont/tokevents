@@ -147,7 +147,7 @@ export const agendar = async (e, setEventos, setOpenModal, eventos, id) => {
         showServerMessage('agendar', resultado.message)
         return
     }
-    resultado.color = '--postit-green'
+    resultado.color = 'var(--postit-green)'
     setEventos([resultado, ...eventos]);
     setOpenModal(false)
 }
