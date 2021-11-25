@@ -14,7 +14,8 @@ import { update, remove, concluir } from "../utils/handleForms";
 
 
 export default function PostIt({ info, isCompleted }) {
-    const { setEventos, eventos } = useContext(Context);
+    const { setNaoConcluidos, naoConcluidos,
+    setConcluidos, concluidos } = useContext(Context);
     const [modalOpen, setModalOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false);
     const [openCollapse, setOpenCollapse] = useState(false)
@@ -58,7 +59,7 @@ export default function PostIt({ info, isCompleted }) {
                 <div className="post-it-btn">
                     {isCompleted ? '' : (
                         <Button color="success" onClick={() => {
-                            concluir(info._id, eventos, setEventos, setModalOpen)
+                            concluir(info._id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen)
                         }} >
                             Concluir Evento
                         </Button>)
@@ -84,7 +85,7 @@ export default function PostIt({ info, isCompleted }) {
                     {isEdit ? (<div className="form-container">
                         <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) => update(e, setEventos, setModalOpen, eventos, info._id)} >
+                            onSubmit={(e) => update(e, setNaoConcluidos, setModalOpen, naoConcluidos, info._id)} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
@@ -171,7 +172,8 @@ export default function PostIt({ info, isCompleted }) {
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger" onClick={() => remove(info._id, setEventos, eventos, setModalOpen)}>
+                                <Button color="danger" onClick={() => remove(info._id, naoConcluidos, setNaoConcluidos, 
+                                    concluidos, setConcluidos ,setModalOpen)}>
                                     Confirmar
                                 </Button>
                                 <Button
