@@ -152,7 +152,8 @@ export const agendar = async (e, setEventos, setOpenModal, eventos, id) => {
     setOpenModal(false)
 }
 
-export const update = async (e, setEventos, setModalOpen, eventos, id) =>{
+export const update = async (e, setNaoConcluidos, setModalOpen, naoConcluidos, id) =>{
+    console.log(id);
     e.preventDefault()
     const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     const form = e.target
@@ -185,13 +186,13 @@ export const update = async (e, setEventos, setModalOpen, eventos, id) =>{
         showServerMessage('editar', resultado.message)
         return
     }
-    const naoAlterados = eventos.filter(evento => evento._id !== id )
+    const naoAlterados = naoConcluidos.filter(evento => evento._id !== id )
 
-    setEventos([resultado, ...naoAlterados])
+    setNaoConcluidos([resultado, ...naoAlterados])
     setModalOpen(false)
 }
 
-export const remove = async (id, setEventos, eventos, setModalOpen) => {
+export const remove = async (id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen) => {
     const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     const body = JSON.stringify({
         id: id,
@@ -210,13 +211,15 @@ export const remove = async (id, setEventos, eventos, setModalOpen) => {
         showServerMessage('deletar', resultado.message)
         return
     }
-    const eventosAtuais = eventos.filter(evento => evento._id !== id)
-    setEventos(eventosAtuais)
+    const concluidosAtuais = concluidos.filter(evento => evento._id !== id)
+    setConcluidos(concluidosAtuais)
+    const naoConcluidosAtuais = naoConcluidos.filter(evento => evento._id !== id)
+    setNaoConcluidos(naoConcluidosAtuais)
     setModalOpen(false)
     
 }
 
-export const concluir = async (id, eventos ,setEventos, setModalOpen) => {
+export const concluir = async (id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen) => {
     const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
     const body = JSON.stringify({
         id,
@@ -233,13 +236,12 @@ export const concluir = async (id, eventos ,setEventos, setModalOpen) => {
     })
 
     const resultado = await concluirReq.json()
-    console.log(resultado);
     if (resultado.erro) {
         showFeedBack('editar', resultado.message)
         return   
     }
-
-    const naoConcluidos = eventos.filter(evento => evento._id !== id)
+    setConcluidos([resultado, ...concluidos])
+    const naoConcluidosAtuais = naoConcluidos.filter(evento => evento._id !== resultado._id)
+    setNaoConcluidos(naoConcluidosAtuais)
     setModalOpen(false)
-    setEventos(naoConcluidos)
 }
