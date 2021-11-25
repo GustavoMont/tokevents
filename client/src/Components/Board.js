@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext} from 'react'
 import { Context } from '../Context/EventContext';
 import {
     Modal, ModalHeader, ModalBody,
@@ -15,9 +15,8 @@ import PostIt from './PostIt'
 
 
 export default function Board(){
-    const [naoConcluidos, setNaoConcluidos] = useState([])
+    const {naoConcluidos, setNaoConcluidos} = useContext(Context)
     const [openModal, setOpenModal] = useState(false);
-    const { eventos, setEventos } = useContext(Context)
     document.body.style.overflow = openModal ? 'hidden' : 'auto'
     window.onscroll = () =>{
         const menu = document.querySelector('#menu')
@@ -26,13 +25,6 @@ export default function Board(){
         const boardPos = board.getBoundingClientRect().top
         menu.classList.toggle('bg-active', boardPos <= menuHeigth )
     }
-
-    useEffect(() =>{
-        const naoConcluidos = eventos.filter(evento => !(evento.complete || 
-            new Date(evento.data_fim) < new Date()))
-        setNaoConcluidos(naoConcluidos)
-    },[eventos])
-
 
     return (
         <>
@@ -53,7 +45,8 @@ export default function Board(){
                 </ModalHeader>
                 <ModalBody>
                     <Form action="/events/agendar" method="POST"
-                        onSubmit={(e) => agendar(e, setEventos, setOpenModal, eventos)} >
+                        onSubmit={(e) => agendar(e, setNaoConcluidos, setOpenModal, naoConcluidos)} 
+                        >
                         <FormGroup>
                             <Label for={"title"}>Título do Evento: <span>*</span></Label>
                             <Input
