@@ -7,15 +7,15 @@ import {
     Input, Row, Col, FormFeedback, Collapse
 } from 'reactstrap'
 import '../styles/Postit.css'
-import { formateDate } from "../utils/formateDate";
-import { update, remove, concluir } from "../utils/handleForms";
-
+import { formateDate, formateToDB } from "../utils/formateDate";
+import { alterFetch } from "../utils/alterFetch";
+import { showServerMessage } from '../utils/handleForms'
 
 
 
 export default function PostIt({ info, isCompleted }) {
     const { setNaoConcluidos, naoConcluidos,
-    setConcluidos, concluidos } = useContext(Context);
+    setConcluidos, concluidos, token } = useContext(Context);
     const [modalOpen, setModalOpen] = useState(false)
     const [isEdit, setIsEdit] = useState(false);
     const [openCollapse, setOpenCollapse] = useState(false)
@@ -41,11 +41,11 @@ export default function PostIt({ info, isCompleted }) {
 
             </div>
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} >
-                <Collapse horizontal id="collapse-msg-deletar" >
+                <Collapse horizontal id="collapse-msg-erro" >
                     <Alert
                         color="danger"
                     >
-                        <p id="deletar-msg"></p>
+                        <p id="erro-msg"></p>
                     </Alert>
                 </Collapse>
                 <ModalHeader toggle={() => { setModalOpen(false); setOpenCollapse(false) }}>
@@ -58,8 +58,17 @@ export default function PostIt({ info, isCompleted }) {
                 <hr />
                 <div className="post-it-btn">
                     {isCompleted ? '' : (
-                        <Button color="success" onClick={() => {
-                            concluir(info._id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen)
+                        <Button color="success" onClick={async () => {
+                            const resultado = await alterFetch( '/events/concluir' ,token, info._id, 'PUT')
+
+                            if (resultado.erro) {
+                                showServerMessage('erro', resultado.message)
+                                return
+                            }
+                            setConcluidos([resultado, ...concluidos])
+                            const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== resultado._id)
+                            setNaoConcluidos(naoConcluidosAtualizados)
+                            setModalOpen(false)
                         }} >
                             Concluir Evento
                         </Button>)
@@ -85,7 +94,34 @@ export default function PostIt({ info, isCompleted }) {
                     {isEdit ? (<div className="form-container">
                         <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) => update(e, setNaoConcluidos, setModalOpen, naoConcluidos, info._id)} >
+                            onSubmit={async (e) => {
+                                e.preventDefault()
+                                const form = e.target
+                                let { title, description,
+                                    data_inicio, horas_inicio,
+                                    data_fim, horas_fim
+                                } = form
+                                title = title.value || undefined
+                                description = description.value || undefined
+                            
+                                data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
+                                data_fim = formateToDB(data_fim.value, horas_fim.value)
+                            
+                            
+                                const body = JSON.stringify({
+                                    id: info._id, data_inicio, data_fim,
+                                    title, description, user_id: token
+                                })
+
+                                const resultado = await alterFetch( 'events/update' ,token, info._id, 'PUT', body)
+                                if (resultado.erro) {
+                                    showServerMessage('editar', resultado.message)
+                                    return
+                                }
+                                const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== resultado._id)
+                                setNaoConcluidos([resultado ,...naoConcluidosAtualizados])
+                                setModalOpen(false)
+                            }} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
@@ -172,8 +208,18 @@ export default function PostIt({ info, isCompleted }) {
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger" onClick={() => remove(info._id, naoConcluidos, setNaoConcluidos, 
-                                    concluidos, setConcluidos ,setModalOpen)}>
+                                <Button color="danger" onClick={async () => {
+                                    const resultado = await alterFetch('/events/remove', token, info._id, 'DELETE')
+                                    if (resultado.erro) {
+                                        showServerMessage('erro', resultado.message)
+                                        return
+                                    }
+                                    const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== info._id)
+                                    const concluidosAtualizados = concluidos.filter(evento => evento._id !== info._id)
+                                    setConcluidos(concluidosAtualizados)
+                                    setNaoConcluidos(naoConcluidosAtualizados)
+                                    setModalOpen(false)
+                                }}>
                                     Confirmar
                                 </Button>
                                 <Button
