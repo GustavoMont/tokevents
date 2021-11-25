@@ -16,7 +16,8 @@ export default function Concluidos(){
     }
 
     return (
-        <div id="board">
+        <div id="board"> {/*Conteúdo da página /home/concluidos */}
+                {/* Renderiza os post it de eventos já concluídos*/}
                 {concluidos.length === 0 ? <h1>NENHUM EVENTO CADASTRADO</h1> : concluidos.map(evento => (
                     <PostIt className="concluido" info={{...evento}}  isCompleted={true} key={evento._id} />
                 ))}

@@ -1,15 +1,17 @@
-import { formateToDB } from './formateDate'
+import { formateToDB } from './formateDate' // Função que formata a data para o banco de dados
+// Salva o token e redireciona para a home
 const saveGoHome = (resultado) => {
     sessionStorage.setItem('@tokevents', JSON.stringify(resultado))
     window.location.href = '/home'
 }
-
+// Mostra a mensagem que vem do servidor
 export const showServerMessage = (id, message) => {
     const msg = document.querySelector(`#${id}-msg`)
     document.querySelector(`#collapse-msg-${id}`).classList.add('show')
     msg.innerText = message
 }
 
+//Confirma se a senha possui letras, números e caracteres especiais através do REGEX
 const handlePassword = (password) => {
     return(
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password) && password.length <= 16
@@ -47,15 +49,17 @@ export const handleLogin  = async (e) =>{
         saveGoHome(resultado)
 }
 
-
+// Função que lida e valida os campos do formulário de cadastro
 export const handleSignIn = async (e) => {
 
     e.preventDefault()
     const form = e.target
     const children = Array.from(document.querySelectorAll('[data-field]'))
+    // Toda vez que tentar enviar o formulário as mensagens de validação são apagadas
     children.forEach(input => {
         input.classList.remove('is-invalid')
     })
+    // pegando campos específicos do formulário
     let {email, user_name, nome, 
         cad_password, confirm} = form
     
@@ -64,6 +68,7 @@ export const handleSignIn = async (e) => {
     user_name = user_name.value
     nome = nome.value
     const password = cad_password.value
+    //Validação dos campos
     if (password !== confirm.value) {
         return
     }
@@ -79,6 +84,7 @@ export const handleSignIn = async (e) => {
         showFeedBack('nome')
         return
     }
+    // preparando as informações para o backend
     const body = JSON.stringify({
         email, user_name, nome,
         password
@@ -90,12 +96,12 @@ export const handleSignIn = async (e) => {
         },
         body
     })
-    
     const resultado = await signInRes.json()
     if (resultado.erro) {
         showServerMessage('sign', resultado.message)
         return
     }
+    // Função que irá salvar o tolken e redirecionar
     saveGoHome(resultado)
 } 
 export const handleToken = async (token)=>{
@@ -150,96 +156,4 @@ export const agendar = async (e, setEventos, setOpenModal, eventos, id) => {
     resultado.color = 'var(--postit-green)'
     setEventos([resultado, ...eventos]);
     setOpenModal(false)
-}
-
-export const update = async (e, setNaoConcluidos, setModalOpen, naoConcluidos, id) =>{
-    e.preventDefault()
-    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
-    const form = e.target
-    let { title, description,
-        data_inicio, horas_inicio,
-        data_fim, horas_fim
-    } = form
-    title = title.value || undefined
-    description = description.value || undefined
-
-    data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
-    data_fim = formateToDB(data_fim.value, horas_fim.value)
-
-
-    const body = JSON.stringify({
-        id, data_inicio, data_fim,
-        title, description, user_id: token
-    })
-
-    const updateRes = await fetch('/events/update', {
-        method: 'PUT',
-        headers:{
-            'Content-Type': 'application/json',
-            auth: `Bearer ${token}`
-        },
-        body
-    })
-    const resultado = await updateRes.json()
-    if (resultado.erro) {
-        showServerMessage('editar', resultado.message)
-        return
-    }
-    const naoAlterados = naoConcluidos.filter(evento => evento._id !== id )
-
-    setNaoConcluidos([resultado, ...naoAlterados])
-    setModalOpen(false)
-}
-
-export const remove = async (id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen) => {
-    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
-    const body = JSON.stringify({
-        id: id,
-        user_id: token
-    })
-    const removeReq = await fetch('/events/remove', {
-        method:'DELETE',
-        headers:{
-            'Content-Type': 'application/json',
-            auth: `Bearer ${token}`
-        },
-        body
-    })
-    const resultado = await removeReq.json()
-    if (resultado.erro) {
-        showServerMessage('deletar', resultado.message)
-        return
-    }
-    const concluidosAtuais = concluidos.filter(evento => evento._id !== id)
-    setConcluidos(concluidosAtuais)
-    const naoConcluidosAtuais = naoConcluidos.filter(evento => evento._id !== id)
-    setNaoConcluidos(naoConcluidosAtuais)
-    setModalOpen(false)
-    
-}
-
-export const concluir = async (id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen) => {
-    const { token } = JSON.parse(sessionStorage.getItem('@tokevents'))
-    const body = JSON.stringify({
-        id,
-        user_id: token
-    })
-    const concluirReq = await fetch('/events/concluir', {
-        method: 'PUT',
-        headers:{
-            'Content-Type': 'application/json',
-            auth: `Bearer ${token}`
-        },
-        body
-    })
-
-    const resultado = await concluirReq.json()
-    if (resultado.erro) {
-        showFeedBack('editar', resultado.message)
-        return   
-    }
-    setConcluidos([resultado, ...concluidos])
-    const naoConcluidosAtuais = naoConcluidos.filter(evento => evento._id !== resultado._id)
-    setNaoConcluidos(naoConcluidosAtuais)
-    setModalOpen(false)
 }

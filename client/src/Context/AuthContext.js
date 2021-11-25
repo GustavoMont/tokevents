@@ -7,9 +7,12 @@ const Context = createContext()
 function AuthProvider({children}){
     const [isAuth, setIsAuth] = useState(false)
     const [loading, setLoading] = useState(true)
+    // Contexto de autenticação do usuário
     useEffect(() =>{
         const session  = JSON.parse(sessionStorage.getItem('@tokevents'))
         setLoading(true)
+        // se tem algo no sessionStorage ele vê se o token é válido
+        // Enquanto verifica se é válido ele deixa o component Loading na tela
         if (session) {
             (async ()=>{
                 setIsAuth(await handleToken('Bearer ' + session.token))

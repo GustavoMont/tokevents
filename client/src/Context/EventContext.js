@@ -4,7 +4,6 @@ import { randomBg } from "../utils/randomGenarate";
 const Context = createContext() 
 
 function EventProvider({children}){
-    // const [eventos, setEventos] = useState([]);
     const [ naoConcluidos, setNaoConcluidos ] = useState([])
     const [ concluidos, setConcluidos ] = useState([])
     const bgColors = ['--postit-yellow', '--postit-pink', '--postit-green', '--postit-orange']
@@ -12,6 +11,7 @@ function EventProvider({children}){
     useEffect(() => {
         (async () => {
             const body = JSON.stringify({ user_id: token })
+            // Pega todos os eventos do usuário
             const eventosRes = await fetch('/events', {
                 method: 'POST',
                 headers: {
@@ -25,9 +25,11 @@ function EventProvider({children}){
                 window.location.href = '/'
                 return
             };
+            // adiciona uma cor para cada evento
             events.forEach(evento => { 
                 evento.color =  `var(${randomBg(bgColors, 0, bgColors.length - 1)})` 
             })
+            // Separa os não concluídos dos compluídos
             const naoConcluidos = events.filter(evento => !(evento.complete || 
                 new Date(evento.data_fim) < new Date()))
             const concluidos = events.filter(evento => (evento.complete || 

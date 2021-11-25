@@ -7,18 +7,18 @@ import {
     Input, Row, Col, FormFeedback, Collapse
 } from 'reactstrap'
 import '../styles/Postit.css'
-import { formateDate } from "../utils/formateDate";
-import { update, remove, concluir } from "../utils/handleForms";
+import { formateDate, formateToDB } from "../utils/formateDate";
+import { alterFetch } from "../utils/alterFetch";
+import { showServerMessage } from '../utils/handleForms'
 
 
 
-
-export default function PostIt({ info, isCompleted }) {
+export default function PostIt({ info, isCompleted }) { /*isCompleted informa se são os eventos COncluídos ou não */
     const { setNaoConcluidos, naoConcluidos,
-    setConcluidos, concluidos } = useContext(Context);
-    const [modalOpen, setModalOpen] = useState(false)
-    const [isEdit, setIsEdit] = useState(false);
-    const [openCollapse, setOpenCollapse] = useState(false)
+    setConcluidos, concluidos, token } = useContext(Context); //Contexto Event Provider 
+    const [modalOpen, setModalOpen] = useState(false) //Abre fecha o modal
+    const [isEdit, setIsEdit] = useState(false); // Fala se é um Collapse de edição ou não
+    const [openCollapse, setOpenCollapse] = useState(false) // Abre ou fecha o Collapse
     document.body.style.overflow = modalOpen ? 'hidden' : 'auto'
     return (
         <>
@@ -34,18 +34,19 @@ export default function PostIt({ info, isCompleted }) {
                     </div>
                 </header>
                 <div className="desc">
-                    <p>{info.description.slice(0, 200) + '...'}</p>
+                    <p>{info.description.slice(0, 200) + '...'}</p> {/*Mostra apenas os 200 primeiros caracteres */}
                 </div>
                 <p className="data" >{formateDate(info.data_inicio)} {info.data_fim ? ` - ${formateDate(info.data_fim)} ` : ''}</p>
 
 
             </div>
+            {/* Modal para mostrar com mais informações o evento do post it */}
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} >
-                <Collapse horizontal id="collapse-msg-deletar" >
+                <Collapse horizontal id="collapse-msg-erro" > {/*Exibe mensagem de erro para concluir ou remover evento */}
                     <Alert
                         color="danger"
                     >
-                        <p id="deletar-msg"></p>
+                        <p id="erro-msg"></p>
                     </Alert>
                 </Collapse>
                 <ModalHeader toggle={() => { setModalOpen(false); setOpenCollapse(false) }}>
@@ -56,14 +57,26 @@ export default function PostIt({ info, isCompleted }) {
                     {info.description}
                 </ModalBody>
                 <hr />
+                {/* Se isCompleted não mostre o butão de edição */}
                 <div className="post-it-btn">
                     {isCompleted ? '' : (
-                        <Button color="success" onClick={() => {
-                            concluir(info._id, naoConcluidos, setNaoConcluidos, concluidos, setConcluidos ,setModalOpen)
+                        <Button color="success" onClick={async () => {
+                            // Função para concluir um evento 
+                            const resultado = await alterFetch( '/events/concluir' ,token, info._id, 'PUT')
+
+                            if (resultado.erro) {
+                                showServerMessage('erro', resultado.message)
+                                return
+                            }
+                            setConcluidos([resultado, ...concluidos])
+                            const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== resultado._id)
+                            setNaoConcluidos(naoConcluidosAtualizados)
+                            setModalOpen(false)
                         }} >
                             Concluir Evento
                         </Button>)
                     }
+                    {/* Se isCompleted não mostre o butão de edição */}
                     {isCompleted ? '' : (
                         <Button color="warning"
                             onClick={() => {
@@ -82,10 +95,38 @@ export default function PostIt({ info, isCompleted }) {
                 </div>
 
                 <Collapse isOpen={openCollapse}>
+                    {/* Formulário de edição do evento */}
                     {isEdit ? (<div className="form-container">
                         <h3>Editar Evento</h3>
                         <Form action="/events/update" method="PUT" id="edit"
-                            onSubmit={(e) => update(e, setNaoConcluidos, setModalOpen, naoConcluidos, info._id)} >
+                            onSubmit={async (e) => {
+                                e.preventDefault()
+                                const form = e.target
+                                let { title, description,
+                                    data_inicio, horas_inicio,
+                                    data_fim, horas_fim
+                                } = form
+                                title = title.value || undefined
+                                description = description.value || undefined
+                                // Formatando a data para o banco de dados
+                                data_inicio = formateToDB(data_inicio.value, horas_inicio.value)
+                                data_fim = formateToDB(data_fim.value, horas_fim.value)
+                            
+                            
+                                const body = JSON.stringify({
+                                    id: info._id, data_inicio, data_fim,
+                                    title, description, user_id: token
+                                })
+
+                                const resultado = await alterFetch( 'events/update' ,token, info._id, 'PUT', body)
+                                if (resultado.erro) {
+                                    showServerMessage('editar', resultado.message)
+                                    return
+                                }
+                                const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== resultado._id)
+                                setNaoConcluidos([resultado ,...naoConcluidosAtualizados])
+                                setModalOpen(false)
+                            }} >
                             <FormGroup>
                                 <Label for={"title"}>Título do Evento: <span>*</span></Label>
                                 <Input
@@ -172,8 +213,19 @@ export default function PostIt({ info, isCompleted }) {
                         >
                             <p style={{ textAlign: 'center' }} ><strong>Deseja excluir esse evento?</strong></p>
                             <div className="post-it-delete">
-                                <Button color="danger" onClick={() => remove(info._id, naoConcluidos, setNaoConcluidos, 
-                                    concluidos, setConcluidos ,setModalOpen)}>
+                                <Button color="danger" onClick={async () => {
+                                    // Função que faz a exclusão do evento
+                                    const resultado = await alterFetch('/events/remove', token, info._id, 'DELETE')
+                                    if (resultado.erro) {
+                                        showServerMessage('erro', resultado.message)
+                                        return
+                                    }
+                                    const naoConcluidosAtualizados = naoConcluidos.filter(evento => evento._id !== info._id)
+                                    const concluidosAtualizados = concluidos.filter(evento => evento._id !== info._id)
+                                    setConcluidos(concluidosAtualizados)
+                                    setNaoConcluidos(naoConcluidosAtualizados)
+                                    setModalOpen(false)
+                                }}>
                                     Confirmar
                                 </Button>
                                 <Button
