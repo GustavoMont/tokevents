@@ -56,21 +56,22 @@ export default function PostIt({ info, isCompleted }) {
                 </ModalBody>
                 <hr />
                 <div className="post-it-btn">
-                    {   isCompleted ? '' : (
+                    {isCompleted ? '' : (
                         <Button color="success" onClick={() => {
                             concluir(info.id, eventos, setEventos, setModalOpen)
                         }} >
                             Concluir Evento
                         </Button>)
                     }
-                    <Button color="warning"
-                        onClick={() => {
-                            setOpenCollapse(!openCollapse);
-                            setIsEdit(true)
-                        }}
-                    >
-                        Editar Evento
-                    </Button>
+                    {isCompleted ? '' : (
+                        <Button color="warning"
+                            onClick={() => {
+                                setOpenCollapse(!openCollapse);
+                                setIsEdit(true)
+                            }}
+                        >
+                            Editar Evento
+                        </Button>)}
                     <Button
                         color="danger"
                         onClick={() => { setOpenCollapse(!openCollapse); setIsEdit(false) }}
